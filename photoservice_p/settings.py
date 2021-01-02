@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'users'
 ]
 
+# usersアプリケーション内で設定するUserというモデルをこのプロジェクトのUserモデルとして利用するという意味。
+AUTH_USER_MODEL = 'users.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -4,6 +4,7 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
+from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
   use_in_migrations = True
@@ -11,10 +12,10 @@ class UserManager(BaseUserManager):
   def _create_user(self, username, email, password, **extra_fields): 
     if not username:
       raise ValueError('The given username must be set')
-    if not email:
+    elif not email:
       raise ValueError('The given email must be set')
 
-    username = self.normalize_username(username)
+    username = self.model.normalize_username(username)
     email = self.normalize_email(email)
     user = self.model(username=username, email=email, **extra_fields) 
     user.set_password(password) 
@@ -47,9 +48,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
   objects = UserManager()
 
-  USERNAME_FIELD = "email" 
-  EMAIL_FIELD = "email" 
-  REQUIRED_FIELDS = []
+  USERNAME_FIELD = 'username'
+  EMAIL_FIELD = 'email'
+  # ↓superuser作るときに必要なものを定義。USERNAME_FIELDに指定したものとpasswordはdefaultで要求される。
+  REQUIRED_FIELDS = ['email',]
   
   class Meta:
     verbose_name = _('user')
