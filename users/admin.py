@@ -19,6 +19,7 @@ class MyUserCreationForm(UserCreationForm):
 
 """カスタムユーザーモデルの Admin""" 
 class MyUserAdmin(UserAdmin):
+  # ↓Userのリンクをクリックした時の詳細画面で確認できる。
   fieldsets = (
     (None, {'fields': ('username', 'email', 'password')}), 
     (_('Permissions'), {'fields': ('is_active', 'is_staff','is_superuser', 'groups', 'user_permissions')}),
@@ -26,7 +27,7 @@ class MyUserAdmin(UserAdmin):
   )
   add_fieldsets = (
     (None, {'classes': ('wide',),
-    'fields': ('email', 'password1', 'password2'),}),
+    'fields': ('username', 'email', 'password1', 'password2'),}),
   )
   form = MyUserChangeForm
   add_form = MyUserCreationForm
