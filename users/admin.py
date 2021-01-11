@@ -21,7 +21,7 @@ class MyUserCreationForm(UserCreationForm):
 class MyUserAdmin(UserAdmin):
   # ↓Userのリンクをクリックした時の詳細画面で確認できる。
   fieldsets = (
-    (None, {'fields': ('username', 'email', 'password')}), 
+    (None, {'fields': ('username', 'email', 'password', 'fav_photos')}), 
     (_('Permissions'), {'fields': ('is_active', 'is_staff','is_superuser', 'groups', 'user_permissions')}),
     (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
   )

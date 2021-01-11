@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
+from app.models import Photo
 
 class UserManager(BaseUserManager):
   use_in_migrations = True
@@ -42,6 +43,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin): 
   username = models.CharField(_('username'), max_length=50, unique=True, error_messages={'unique':_("That username already exists."),},) 
   email = models.EmailField(_('email address'), unique=True)
+  # 中間テーブル
+  fav_photos = models.ManyToManyField(Photo, blank=True) 
   is_staff = models.BooleanField(_('staff status'), default=False)
   is_active = models.BooleanField(_('active'), default=True)
   date_joined = models.DateTimeField(_('date_joined'), default=timezone.now)
