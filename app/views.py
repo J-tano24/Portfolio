@@ -64,3 +64,14 @@ def photos_category(request, category):
   # 取得したCategoryに属するPhoto一覧を取得。逆参照？
   photos = Photo.objects.filter(category=category).order_by('-created_at')
   return render(request, 'app/index.html', {'photos':photos, 'category': category})
+
+@login_required
+@require_POST
+def fav_photos_status(request):
+  photo = get_object_or_404(Photo, pk=require.POST["photo_id"])
+  user = request.user
+  if photo in user.fav_photos.all():
+    user.fav_photos.remove(photo)
+  else:
+    user.fav_photos.add(photo)
+  return redirect('app:photo_detail', photo_id=photo.id)

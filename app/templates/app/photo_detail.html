@@ -10,12 +10,15 @@
 
   <h2>{{ photo.title }}</h2>
   <p>{{ photo.comment }}</p>
+  
+  
+  
   <!-- 削除ボタン -->
   <!-- アクセスしたユーザー＝この写真を投稿したユーザーの時だけ削除btnが表示されればいいのでその条件を書く。 -->
   {% if request.user == photo.user %}
-  <form method="post" action="{% url 'app:photos_delete' photo.id %}">{% csrf_token %}
-    <button class="btn" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
-  </form>
+    <form method="post" action="{% url 'app:photos_delete' photo.id %}">{% csrf_token %}
+      <button class="btn" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
+    </form>
   {% endif %}
 </div>
 
