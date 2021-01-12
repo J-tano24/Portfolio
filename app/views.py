@@ -48,9 +48,9 @@ def photos_new(request):
     form = PhotoForm()
   return render(request, 'app/photos_new.html', {'form': form})
 
-def photos_detail(request, photo_id):
-  photo = get_object_or_404(Photo, pk=photo_id)
-  return render(request, 'app/photo_detail.html', {'photo': photo})
+def photos_detail(request, pk):
+  photo = get_object_or_404(Photo, pk=pk)
+  return render(request, 'app/photos_detail.html', {'photo': photo})
 
 @require_POST
 def photos_delete(request, pk):
