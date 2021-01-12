@@ -68,10 +68,16 @@ def photos_category(request, category):
 @login_required
 @require_POST
 def fav_photos_status(request):
-  photo = get_object_or_404(Photo, pk=require.POST["photo_id"])
+  photo = get_object_or_404(Photo, pk=request.POST["photo_id"])
   user = request.user
   if photo in user.fav_photos.all():
     user.fav_photos.remove(photo)
   else:
     user.fav_photos.add(photo)
-  return redirect('app:photo_detail', photo_id=photo.id)
+  return redirect('app:photos_detail', pk=photo.id)
+
+@login_required
+def fav_photos(request):
+  user = request.user
+  photos = user.fav_photos.all()
+  return render(request, 'app/index.html', {'photos': photos})

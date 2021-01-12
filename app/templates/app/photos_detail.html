@@ -9,8 +9,20 @@
   </div>
 
   <h2>{{ photo.title }}</h2>
-  <p>{{ photo.comment }}</p>
+  <p>{{ photo.place_name }}</p>
   
+  <div class="point-fav-section">
+    {% if request.user.is_authenticated %}
+      <form action="{% url 'app:fav_photos_status' %}" method="post">{% csrf_token %}
+        <input type="hidden" name="photo_id" value="{{ photo.id }}">
+        {% if photo in user.fav_photos.all %}
+        <input type="submit" name="submit" class="fav_button" value="お気に入りから外す"/> 
+        {% else %}
+        <input type="submit" name="submit" class="fav_button" value=" お気に入りに入れる" />
+        {% endif %}
+      </form>
+    {% endif %}
+  </div>
   
   <!-- 削除ボタン -->
   <!-- アクセスしたユーザー＝この写真を投稿したユーザーの時だけ削除btnが表示されればいいのでその条件を書く。 -->

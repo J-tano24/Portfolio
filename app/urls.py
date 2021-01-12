@@ -10,6 +10,8 @@ urlpatterns = [
   path('photos/<int:pk>/', views.photos_detail, name='photos_detail'),
   path('photos/<int:pk>/delete/', views.photos_delete, name='photos_delete'),
   path('photos/<str:category>/', views.photos_category, name='photos_category'),
+  path('fav_photos/', views.fav_photos, name='fav_photos'),
+  path('fav_photos_status/', views.fav_photos_status, name='fav_photos_status'),
 
   path('signup/', views.signup, name='signup'),
   path('login/', auth_views.LoginView.as_view(template_name='app/login.html'), name='login'),
