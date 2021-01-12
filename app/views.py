@@ -1,11 +1,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate, login 
-from .forms import CustomUserCreationForm 
+from django.contrib.auth import get_user_model, authenticate, login 
+from .forms import CustomUserCreationForm
+from .models import Photo, Category
+from .forms import PhotoForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.views.decorators.http import require_POST
 
 def index(request):
-  return render(request, 'app/index.html')
+  photos = Photo.objects.all().order_by('-created_at')
+  return render(request, 'app/index.html', {'photos': photos})
 
-def 
+def users_detail(request, pk):
+  user = get_object_or_404(get_user_model(), pk=pk)
+  # Userインスタンス=>Photoインスタンスへの逆参照。特定のユーザーのphoto一覧を表示できる。シェルでクエリセットで取得できることを確認可能。
+  photos = user.photo_set.all().order_by('-created_at')
+  return render(request, 'app/users_detail.html', {'user':user, 'photos':photos})
 
 def signup(request):
   if request.method == 'POST':
@@ -23,3 +33,34 @@ def signup(request):
     form = CustomUserCreationForm()
     return render(request, 'app/signup.html', {'form': form})
 
+@login_required
+def photos_new(request):
+  if request.method == "POST":
+    form = PhotoForm(request.POST, request.FILES)
+    if form.is_valid():
+      # saveメソッドのcommit引数をFalseにすることで、DBには保存しないようにしている。なぜなら、この段階でphotoインスタンスのuserフィールドに入れる値が決まっていないから。
+      photo = form.save(commit=False)
+      photo.post_user = request.user
+      photo.save()
+      messages.success(request, "投稿が完了しました！")
+    return redirect('app:users_detail', pk=request.user.pk)
+  else:
+    form = PhotoForm()
+  return render(request, 'app/photos_new.html', {'form': form})
+
+def photos_detail(request, photo_id):
+  photo = get_object_or_404(Photo, pk=photo_id)
+  return render(request, 'app/photo_detail.html', {'photo': photo})
+
+@require_POST
+def photos_delete(request, pk):
+  photo = get_object_or_404(Photo, pk=pk)
+  photo.delete()
+  return redirect('app:users_detail', request.user.id)
+
+def photos_category(request, category):
+  # title(Categoryのtitle、つまりcategory)がURLの文字列と一致するCategoryインスタンスを取得。
+  category = Category.objects.get(title=category)
+  # 取得したCategoryに属するPhoto一覧を取得。逆参照？
+  photos = Photo.objects.filter(category=category).order_by('-created_at')
+  return render(request, 'app/index.html', {'photos':photos, 'category': category})

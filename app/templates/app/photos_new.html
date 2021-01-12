@@ -1,0 +1,33 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<div>
+<a href="{% url 'app:index' %}">ホームに戻る</a>
+</div>
+
+<!-- 投稿フォームのimageフィールドからは、画像ファイルをアップロードするが、その際、formタグにenctype="multipart/form-data"をつけないと正常アップロードできないので要記載。 -->
+<form action="{% url 'app:photos_new' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+  <table>
+    <tr>
+      <th>タイトル</th>
+      <td>{{ form.title }}</td>
+    </tr>
+    <tr>
+      <th>名称</th>
+      <td>{{ form.place_name }}</td>
+    </tr>
+    <tr>
+      <th>画像</th>
+      <td>{{ form.image }}</td>
+    </tr>
+    <tr>
+      <th>カテゴリー</th>
+      <td>{{ form.category }}</td>
+    </tr>
+  </table>
+  <button type="submit" class="btn">保存</button>
+</form>
+
+
+{% endblock %}

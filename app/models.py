@@ -10,8 +10,8 @@ class Category(models.Model):
 
 class Photo(models.Model):
   title = models.CharField(max_length=20)
-  address = models.CharField(max_length=100)
-  description = models.TextField(blank=True)
+  place_name = models.CharField(max_length=100)
+  # comment = models.TextField(blank=True)
   image = models.ImageField(upload_to='photos') 
   # photoservice_p/media/photosに自動で保存される。
   category = models.ForeignKey(Category, on_delete=models.PROTECT) 
