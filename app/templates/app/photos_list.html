@@ -8,7 +8,8 @@
       </a>
       <div class="photo-info">
         <a href="{% url 'app:photos_category' category=photo.category %}" class="category">{{ photo.category }}</a>
-        <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.user }}</a>
+        <br>
+        <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
       </div>
     </div>
   {% endfor %}

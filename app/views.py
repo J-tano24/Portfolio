@@ -64,7 +64,7 @@ def photos_category(request, category):
   # 取得したCategoryに属するPhoto一覧を取得。逆参照？
   photos = Photo.objects.filter(category=category).order_by('-created_at')
   return render(request, 'app/index.html', {'photos':photos, 'category': category})
-
+  
 @login_required
 @require_POST
 def fav_photos_status(request):
