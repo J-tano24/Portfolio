@@ -11,6 +11,9 @@ class Category(models.Model):
 class Photo(models.Model):
   title = models.CharField(max_length=20)
   place_name = models.CharField(max_length=100)
+  # 緯度経度フィールド
+  lat = models.DecimalField(max_digits=9, decimal_places=6)
+  lng = models.DecimalField(max_digits=9, decimal_places=6)
   # comment = models.TextField(blank=True)
   image = models.ImageField(upload_to='photos') 
   # photoservice_p/media/photosに自動で保存される。

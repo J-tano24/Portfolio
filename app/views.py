@@ -32,7 +32,7 @@ def signup(request):
   else:
     form = CustomUserCreationForm()
     return render(request, 'app/signup.html', {'form': form})
-
+    
 @login_required
 def photos_new(request):
   if request.method == "POST":

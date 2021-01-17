@@ -13,9 +13,11 @@
         <a href="{% url 'app:photos_new' %}">投稿</a>
         {% if request.user.is_authenticated %}
           <a href="{% url 'app:users_detail' request.user.id %}">マイページ</a>
+          <a href="{% url 'app:fav_photos' %}">お気に入り</a>
           <a href="{% url 'app:logout' %}">ログアウト</a>
         {% else %}
           <a href="{% url 'app:login' %}">ログイン</a>
+
         {% endif %}
       </div>
     </div>
