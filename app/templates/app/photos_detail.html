@@ -8,8 +8,7 @@
     <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
   </div>
 
-  <h2>{{ photo.title }}</h2>
-  <p>{{ photo.place_name }}</p>
+  <h2>{{ photo.place_name }}</h2>
   
   <div class="point-fav-section">
     {% if request.user.is_authenticated %}
@@ -32,7 +31,7 @@
     </form>
   {% endif %}
 
-  
+
 </div>
 
 
