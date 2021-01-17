@@ -4,17 +4,13 @@
 <div>
   <a href="{% url 'app:index' %}">ホームに戻る</a>
 </div>
-<!-- 投稿フォームのimageフィールドからは、画像ファイルをアップロードするが、その際、formタグにenctype="multipart/form-data"をつけないと正常アップロードできないので要記載。 -->
+<!-- 画像ファイルをアップロードする際、formタグにenctype="multipart/form-data"をつけないとアップロードできないので要記載。 -->
 <form action="{% url 'app:photos_new' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
   <table>
     <tr>
       <th>タイトル</th>
-      <!-- titleフィールドに倣ったinputタグを生成。 -->
+      <!-- ↓titleフィールドに倣ったinputタグを生成している。 -->
       <td>{{ form.title }}</td>
-    </tr>
-    <tr>
-      <th>名称</th>
-      <td>{{ form.place_name }}</td>
     </tr>
     <tr>
       <th>画像</th>
@@ -25,13 +21,15 @@
       <td>{{ form.category }}</td>
     </tr>
   </table>
-  <!-- .as_hiddenで画面上では隠すことができる。 -->
+  <!-- Djangoの書き方で.as_hiddenで画面上では隠すことができる。 -->
+  {{ form.place_name.as_hidden }}
   {{ form.lat.as_hidden }}
   {{ form.lng.as_hidden }}  
   <button type="submit" class="btn">保存</button>
 </form>
 
 <div id="header"><b>Google Maps - 場所検索</b></div>
+<p>※ここで検索する値は、名称として投稿画面で表示されます。</p>
 <input type="text" id="keyword"><button id="search">検索実行</button>
 <button id="clear">結果クリア</button>
 <div id="target" style="width: 900px; height: 700px;"></div>
@@ -52,10 +50,6 @@
     // id="target"に対して、アクションをかける。※ここではマップ表示に備え、予め変数に代入している。
     var target = document.getElementById('target');
     // var target = $("#target") ←jQueryの書き方（targetの値を取得）
-
-    var input_lat = document.getElementById('id_lat')
-    var input_lng = document.getElementById('id_lng')
-
     var centerp = {lat: 52.215933, lng: 19.134422};
 
     //マップ表示
@@ -64,12 +58,14 @@
       zoom: 4,
     });
 
-    // 検索実行ボタンが押下されたとき
+    // 検索実行ボタンが押されたとき
     document.getElementById('search').addEventListener('click', function() {
       // 'keyword'にインプットされた値(value)を変数placeに代入。
       var place = document.getElementById('keyword').value;
+      // ↓検索で入力した値をplace_nameフィールドの値に指定する。
+      $('#id_place_name').val(place)
       // （Geocoding：名称・地名・住所などの情報を、緯度経度の座標値に変換してくれる）Googleサーバーに送信するGecoderの新しいインスタンスを作成。
-      var geocoder = new google.maps.Geocoder();      // geocoderのコンストラクタ
+      var geocoder = new google.maps.Geocoder();
 
       geocoder.geocode({
         address: place //'keyword'に入力した値がくる。
@@ -85,12 +81,14 @@
             if (results[0].geometry) {
               // 緯度経度を取得
               var latlng = results[0].geometry.location;
-
+              // 以下では↑のlatlngを使用。latlng.latだけだとconsoleでf()と出てるのが分かる。要は、関数の形(latlng.lat())にすれば、なにか値が取れることが分かる。
               var lat = latlng.lat()
               var lng = latlng.lng()
-              // 取得したタグの値にAPIで取得した値を入れる。
-              input_lat.value = lat
-              input_lng.value = lng
+              // input_lat.value = lat
+              // input_lng.value = lng
+              // 取得したタグのvalueにAPIで取得した値を入れる。
+              $('#id_lat').val(lat)
+              $('#id_lng').val(lng)
 
               // 住所を取得
               var address = results[0].formatted_address;
@@ -102,7 +100,6 @@
               setInfoW(place, latlng, address);
               // マーカーにクリックイベントを追加
               markerEvent();
-
             }
           }
         } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
