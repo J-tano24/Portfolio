@@ -6,14 +6,14 @@ from .forms import PhotoForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-
+  
 def index(request):
   photos = Photo.objects.all().order_by('-created_at')
   return render(request, 'app/index.html', {'photos': photos})
 
 def users_detail(request, pk):
   user = get_object_or_404(get_user_model(), pk=pk)
-  # Userインスタンス=>Photoインスタンスへの逆参照。特定のユーザーのphoto一覧を表示できる。シェルでクエリセットで取得できることを確認可能。
+  # Userインスタンス => Photoインスタンスへの逆参照。特定のユーザーのphoto一覧を表示できる。シェルでクエリセットで取得できることを確認可能。
   photos = user.photo_set.all().order_by('-created_at')
   return render(request, 'app/users_detail.html', {'user':user, 'photos':photos})
 
@@ -32,7 +32,7 @@ def signup(request):
   else:
     form = CustomUserCreationForm()
     return render(request, 'app/signup.html', {'form': form})
-    
+
 @login_required
 def photos_new(request):
   if request.method == "POST":

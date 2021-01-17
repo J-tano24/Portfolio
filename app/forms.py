@@ -12,4 +12,4 @@ class CustomUserCreationForm(UserCreationForm):
 class PhotoForm(ModelForm):
   class Meta:
     model = Photo
-    fields = ['title', 'place_name', 'lat', 'lng', 'image', 'category']
+    fields = ['place_name', 'lat', 'lng', 'image', 'category']
