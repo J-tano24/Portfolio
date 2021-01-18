@@ -38,7 +38,7 @@ def photos_new(request):
   if request.method == "POST":
     form = PhotoForm(request.POST, request.FILES)
     if form.is_valid():
-      # saveメソッドのcommit引数をFalseにすることで、DBには保存しないようにしている。なぜなら、この段階でphotoインスタンスのuserフィールドに入れる値が決まっていないから。
+      # saveメソッドのcommit引数をFalseにすることで、DBには一旦保存しない。この段階でphotoインスタンスのuserフィールドに入れる値が決まっていないから。
       photo = form.save(commit=False)
       photo.post_user = request.user
       photo.save()

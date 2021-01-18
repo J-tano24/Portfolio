@@ -5,7 +5,7 @@
   <a href="{% url 'app:index' %}">ホームに戻る</a>
 </div>
 <!-- 画像ファイルをアップロードする際、formタグにenctype="multipart/form-data"をつけないとアップロードできないので要記載。 -->
-<form action="{% url 'app:photos_new' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+<form action="{% url 'app:photos_new' %}" id="form" method="POST" enctype="multipart/form-data">{% csrf_token %}
   <table>
     <tr>
       <th>画像</th>
@@ -139,7 +139,7 @@
     // マーカーへの吹き出しの追加
     function setInfoW(place, latlng, address) {
       infoWindow = new google.maps.InfoWindow({
-      content: latlng + "<br><br>" + address + "<br><br><a href='http://www.google.com/search?q=" + place + "&tbm=isch' target='_blank'>画像検索 by google</a>"
+      content: address + "<br><br><a href='http://www.google.com/search?q=" + place + "&tbm=isch' target='_blank'>画像検索 by google</a>"
     });
   }
 
