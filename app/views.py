@@ -13,7 +13,6 @@ def index(request):
 
 def users_detail(request, pk):
   user = get_object_or_404(get_user_model(), pk=pk)
-  # Userインスタンス => Photoインスタンスへの逆参照。特定のユーザーのphoto一覧を表示できる。シェルでクエリセットで取得できることを確認可能。
   photos = user.photo_set.all().order_by('-created_at')
   return render(request, 'app/users_detail.html', {'user':user, 'photos':photos})
 
@@ -38,12 +37,15 @@ def photos_new(request):
   if request.method == "POST":
     form = PhotoForm(request.POST, request.FILES)
     if form.is_valid():
-      # saveメソッドのcommit引数をFalseにすることで、DBには一旦保存しない。この段階でphotoインスタンスのuserフィールドに入れる値が決まっていないから。
+      # commit=Falseにすることで、DBには一旦保存しない。この段階でphotoインスタンスのuserフィールドに入れる値が決まっていないから。
       photo = form.save(commit=False)
       photo.post_user = request.user
       photo.save()
       messages.success(request, "投稿が完了しました！")
-    return redirect('app:users_detail', pk=request.user.pk)
+      return redirect('app:users_detail', pk=request.user.pk)
+    else:
+      messages.error(request, "入力に誤りがあります。")
+      return redirect('app:photos_new')
   else:
     form = PhotoForm()
   return render(request, 'app/photos_new.html', {'form': form})

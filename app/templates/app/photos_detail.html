@@ -3,7 +3,9 @@
 {% block content %}
 
 <div class="photo-detail">
-  <img src="{{ photo.image.url }}" class="photo-img" style="width: calc(100%/3); float: left; padding: 10px; margin-bottom: 15px;">
+  <span class="border-left-0" >
+    <img src="{{ photo.image.url }}" alt="Responsive image" class="img-thumbnail shadow p-3 mb-5 bg-white rounded">
+  </span>
   <div class="photo-info">
     <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
   </div>
@@ -15,9 +17,9 @@
       <form action="{% url 'app:fav_photos_status' %}" method="post">{% csrf_token %}
         <input type="hidden" name="photo_id" value="{{ photo.id }}">
         {% if photo in user.fav_photos.all %}
-        <input type="submit" name="submit" class="fav_button" value="お気に入りから外す"/> 
+          <input type="submit" name="submit" class="fav_button" value="お気に入りから外す"/> 
         {% else %}
-        <input type="submit" name="submit" class="fav_button" value=" お気に入りに入れる" />
+          <input type="submit" name="submit" class="fav_button" value=" お気に入りに入れる" />
         {% endif %}
       </form>
     {% endif %}

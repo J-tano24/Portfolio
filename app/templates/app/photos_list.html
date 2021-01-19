@@ -1,14 +1,14 @@
 <!-- index.htmlから読み込む -->
 
-<div class="photo-container">
+<div class="container pt-4 mx-auto w-auto body">
   {% for photo in photos %}
     <div class="photo">
       <a href="{% url 'app:photos_detail' photo.id %}">
-        <span class="border-left-0">
-          <img src="{{ photo.image.url }}" alt="Responsive image" class="img-thumbnail shadow p-3 mb-5 bg-white rounded">
+        <span class="border-left-0" >
+          <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid shadow p-3" style="max-width: 33.3%;" >
         </span>
       </a>
-      <div class="photo-info">
+      <div class="">
         <a href="{% url 'app:photos_category' category=photo.category %}" class="category">{{ photo.category }}</a>
         <br>
         <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
@@ -16,3 +16,9 @@
     </div>
   {% endfor %}
 </div>
+
+<script>
+
+  // <button onclick="open(`photo_enlarge.html`, null, `width=500, height=600`);"></button>
+
+</script>
