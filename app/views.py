@@ -43,9 +43,6 @@ def photos_new(request):
       photo.save()
       messages.success(request, "投稿が完了しました！")
       return redirect('app:users_detail', pk=request.user.pk)
-    else:
-      messages.error(request, "入力に誤りがあります。")
-      return redirect('app:photos_new')
   else:
     form = PhotoForm()
   return render(request, 'app/photos_new.html', {'form': form})

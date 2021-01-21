@@ -9,14 +9,14 @@ class Category(models.Model):
     return self.title
 
 class Photo(models.Model):
+  post_user = models.ForeignKey('users.User', on_delete=models.CASCADE)
+  # photoservice_p/media/photosに自動で保存される。
+  image = models.ImageField(upload_to='photos') 
+  category = models.ForeignKey(Category, on_delete=models.PROTECT) 
   place_name = models.CharField(max_length=100)
   # 緯度経度フィールド（https://stackoverflow.com/questions/57131896/how-do-i-save-google-places-location-to-django-models）
   lat = models.DecimalField(max_digits=9, decimal_places=6)
   lng = models.DecimalField(max_digits=9, decimal_places=6)
-  # photoservice_p/media/photosに自動で保存される。
-  image = models.ImageField(upload_to='photos') 
-  category = models.ForeignKey(Category, on_delete=models.PROTECT) 
-  post_user = models.ForeignKey('users.User', on_delete=models.CASCADE)
   created_at = models.DateTimeField(auto_now=True)
   
   def __str__(self):

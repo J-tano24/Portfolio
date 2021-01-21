@@ -1,18 +1,34 @@
 <!-- index.htmlから読み込む -->
 
-<div class="container pt-4 mx-auto w-auto body">
+<style>
+  .border-left-0 img{
+    transition-duration: 0.5s;
+  }
+  .border-left-0 img{
+    width: 100%;
+    cursor: pointer;
+  }
+  .border-left-0 img:hover{
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
+    transform: translateY(-10px);
+    transition-duration: 0.5s;
+  }
+ 
+</style>
+
+<div class="d-flex">
   {% for photo in photos %}
-    <div class="photo">
+    <div class="" style="">
       <a href="{% url 'app:photos_detail' photo.id %}">
         <span class="border-left-0" >
-          <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid shadow p-3" style="max-width: 33.3%;" >
+          <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border border-white img-thumbnail " >
         </span>
       </a>
-      <div class="">
+      <!-- <div class="" >
         <a href="{% url 'app:photos_category' category=photo.category %}" class="category">{{ photo.category }}</a>
         <br>
         <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
-      </div>
+      </div> -->
     </div>
   {% endfor %}
 </div>

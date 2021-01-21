@@ -13,7 +13,6 @@
     </tr>
     <tr>
       <th>カテゴリー</th>
-      <!-- ↓categoryフィールドに倣ったinputタグを生成している。 -->
       <td>{{ form.category }}</td>
     </tr>
   </table>
@@ -24,11 +23,12 @@
   <button type="submit" class="btn" id="save">保存</button>
 </form>
 
-<div id="header"><b>Google Maps - 場所検索</b></div>
+<b>Google Maps - 場所検索</b>
 <p>※ここで検索する値は、名称として投稿画面で表示されます。</p>
-<input type="text" id="keyword"><button id="search">検索実行</button>
-<button id="clear">結果クリア</button>
-<div id="target" style="width: 900px; height: 700px;"></div>
+<input type="text" id="keyword">
+<button id="search">検索</button>
+<button id="clear">クリア</button>
+<div id="target" style="width: 700px; height: 500px;"></div>
 
 <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap" async defer></script>
 
@@ -41,20 +41,20 @@
   var marker;
   var infoWindow;
 
-  function inputCheck() {
-    // form要素のname属性(frm1)の後に子要素input要素のname属性(lastname)、そのvalueが""だったらという風につなげて参照していく。
-    // テキストボックスのvalue属性は入力された文字列を表す。
-    if(document.id_place_name.value == "") {
-      alert("場所検索を行ってください")
-    } else if (document.id_lat.value == "") {
-      alert("場所検索を行ってください")
-    } else if (document.id_lng.value == "") {
-      alert("場所検索を行ってください")
-    } else {
-      // 上記条件をすべて満たせば、入力内容に問題がないと判断し、データを送信する処理を行う。submit()イベントは、Javascript側から送処理を行いたい時に使用する。
-      document.save.submit();
-    }
-  }   
+  // function inputCheck() {
+  //   // form要素のname属性(frm1)の後に子要素input要素のname属性(lastname)、そのvalueが""だったらという風につなげて参照していく。
+  //   // テキストボックスのvalue属性は入力された文字列を表す。
+  //   if(document.id_place_name.value == "") {
+  //     alert("場所検索を行ってください")
+  //   } else if (document.id_lat.value == "") {
+  //     alert("場所検索を行ってください")
+  //   } else if (document.id_lng.value == "") {
+  //     alert("場所検索を行ってください")
+  //   } else {
+  //     // 上記条件をすべて満たせば、入力内容に問題がないと判断し、データを送信する処理を行う。submit()イベントは、Javascript側から送処理を行いたい時に使用する。
+  //     document.save.submit();
+  //   }
+  // }   
 
 
   function initMap() {
@@ -93,11 +93,9 @@
             if (results[0].geometry) {
               // 緯度経度を取得
               var latlng = results[0].geometry.location;
-              // 以下では↑のlatlngを使用。latlng.latだけだとconsoleでf()と出てるのが分かる。要は、関数の形(latlng.lat())にすれば、なにか値が取れることが分かる。
+              // latlng.latだけだとconsoleでf()と出てるのが分かる。要は、関数の形(latlng.lat())にすれば、なにか値が取れると推測できる。
               var lat = latlng.lat()
               var lng = latlng.lng()
-              // input_lat.value = lat
-              // input_lng.value = lng
               // 取得したタグのvalueにAPIで取得した値を入れる。
               $('#id_lat').val(lat)
               $('#id_lng').val(lng)
@@ -108,7 +106,7 @@
               bounds.extend(latlng);
               // マーカーのセット
               setMarker(latlng);
-              // マーカーへの吹き出しの追加(引数は、上部で定義)
+              // マーカーへの吹き出しの追加
               setInfoW(place, latlng, address);
               // マーカーにクリックイベントを追加
               markerEvent();
@@ -128,7 +126,7 @@
     document.getElementById('clear').addEventListener('click', function() {
       deleteMakers();
     });
-
+    
   }
 
   // マーカーのセットを実施する
