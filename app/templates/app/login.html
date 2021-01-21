@@ -1,20 +1,22 @@
 {% extends 'app/base.html' %}
-
 {% block content %}
 
-<form class="form-signin" method="post">{% csrf_token %}
-  {% if form.errors %}
-    <p>ユーザー名かパスワードが間違っています。</p> 
-  {% endif %}
-
-  <h2>ログイン</h2>
-  <label>ユーザー名</label>
-  <input name="username">
-  <br>
-  <label>パスワード</label>
-  <input type="password" name="password">
-  <br>
-  <input type="submit" value="ログイン">
+<form action="" method="POST">{% csrf_token %}
+  <div class="col-md-6 offset-md-3">
+    <div class="card">
+        <div class="card-body">
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                {{ field }}
+                {{ field.errors }}
+                <hr>
+            {% endfor %}
+            <button type="submit" class="btn btn-success btn-lg btn-block" >ログイン</button>
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% csrf_token %}
+        </div>
+    </div>
+  </div>
 </form>
 
 {% endblock %}

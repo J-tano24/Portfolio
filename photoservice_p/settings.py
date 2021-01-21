@@ -134,3 +134,6 @@ MEDIA_URL = '/media/'
 LOGIN_URL = 'app:login'
 LOGIN_REDIRECT_URL = 'app:index'
 LOGOUT_REDIRECT_URL = 'app:index'
+
+# メールをコンソールに表示する
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

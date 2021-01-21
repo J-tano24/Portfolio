@@ -6,11 +6,24 @@ from .forms import PhotoForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import (
+    LoginView, LogoutView
+)
+from django.views import generic
+from .forms import LoginForm
   
 def index(request):
   photos = Photo.objects.all().order_by('-created_at')
   return render(request, 'app/index.html', {'photos': photos})
 
+class Login(LoginView):
+    form_class = LoginForm
+    template_name = 'app/login.html'
+
+class Logout(LogoutView):
+    template_name = 'app/top.html'
+    
 def users_detail(request, pk):
   user = get_object_or_404(get_user_model(), pk=pk)
   photos = user.photo_set.all().order_by('-created_at')
@@ -31,6 +44,7 @@ def signup(request):
   else:
     form = CustomUserCreationForm()
     return render(request, 'app/signup.html', {'form': form})
+
 
 @login_required
 def photos_new(request):
