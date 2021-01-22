@@ -130,7 +130,7 @@ def photos_new(request):
       photo.post_user = request.user
       photo.save()
       messages.success(request, "投稿が完了しました！")
-      return redirect('app:users_detail', pk=request.user.pk)
+    return redirect('app:users_detail', pk=request.user.pk)
   else:
     form = PhotoForm()
   return render(request, 'app/photos_new.html', {'form': form})

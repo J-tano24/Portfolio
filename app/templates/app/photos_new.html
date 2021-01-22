@@ -4,7 +4,7 @@
 <!-- 画像ファイルをアップロードする際、formタグにenctype="multipart/form-data"をつけないとアップロードできないので要記載。 -->
 
 <form action="{% url 'app:photos_new' %}" id="form" method="POST" enctype="multipart/form-data">{% csrf_token %}
-
+  
   <table>
     <tr>
       <th>画像</th>
@@ -16,53 +16,32 @@
     </tr>
   </table>
   <!-- Djangoの書き方で.as_hiddenで画面上では隠すことができる。 -->
-    {{ form.place_name.as_hidden }}
-    {{ form.lat.as_hidden }}
-    {{ form.lng.as_hidden }}  
+  {{ form.place_name.as_hidden }}
+  {{ form.lat.as_hidden }}
+  {{ form.lng.as_hidden }}  
+  
   <button type="submit" class="btn" id="save">保存</button>
-</form>
-
-<b>Google Maps - 場所検索</b>
-<p>※ここで検索する値は、名称として投稿画面で表示されます。</p>
-<input type="text" id="keyword">
-<button id="search">検索</button>
-<button id="clear">クリア</button>
-<div id="target" style="width: 700px; height: 500px;"></div>
-
-<script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap" async defer></script>
-
-<!-- jQueryの組み込み -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  </form>
+  
+  <b>Google Maps - 場所検索</b>
+  <p>※ここで検索する値は、名称として投稿画面で表示されます。</p>
+  <input type="text" id="keyword">
+  <button id="search">検索</button>
+  <button id="clear">クリア</button>
+<div id="target" style="width: 100%; height: 500px;"></div>
 
 <script>
 
   var map;
   var marker;
   var infoWindow;
-
-  // function inputCheck() {
-  //   // form要素のname属性(frm1)の後に子要素input要素のname属性(lastname)、そのvalueが""だったらという風につなげて参照していく。
-  //   // テキストボックスのvalue属性は入力された文字列を表す。
-  //   if(document.id_place_name.value == "") {
-  //     alert("場所検索を行ってください")
-  //   } else if (document.id_lat.value == "") {
-  //     alert("場所検索を行ってください")
-  //   } else if (document.id_lng.value == "") {
-  //     alert("場所検索を行ってください")
-  //   } else {
-  //     // 上記条件をすべて満たせば、入力内容に問題がないと判断し、データを送信する処理を行う。submit()イベントは、Javascript側から送処理を行いたい時に使用する。
-  //     document.save.submit();
-  //   }
-  // }   
-
-
+  
   function initMap() {
     //マップ初期表示の位置設定
-    // id="target"に対して、アクションをかける。※ここではマップ表示に備え、予め変数に代入している。
     var target = document.getElementById('target');
-    // var target = $("#target") ←jQueryの書き方（targetの値を取得）
+    // var target = $('#target')
     var centerp = {lat: 52.215933, lng: 19.134422};
-
+    
     //マップ表示
     map = new google.maps.Map(target, {
       center: centerp,
@@ -71,23 +50,23 @@
 
     // 検索実行ボタンが押されたとき
     document.getElementById('search').addEventListener('click', function() {
-      // 'keyword'にインプットされた値(value)を変数placeに代入。
-      var place = document.getElementById('keyword').value;
+      // var place = document.getElementById('keyword').value;
+      var place = $('#keyword').val();
       // ↓検索で入力した値をplace_nameフィールドの値に指定する。
       $('#id_place_name').val(place)
-      // （Geocoding：名称・地名・住所などの情報を、緯度経度の座標値に変換してくれる）Googleサーバーに送信するGecoderの新しいインスタンスを作成。
+      // Geocoding：名称・地名・住所などの情報を、緯度経度の座標値に変換してくれる。ジオコードリクエストをGoogleサーバーに送信するGeocoderの新しいインスタンスを作成。https://www.google-mapi.com/event-data-processing/geocoding/
       var geocoder = new google.maps.Geocoder();
-
+      
       geocoder.geocode({
-        address: place //'keyword'に入力した値がくる。
+        'address': place
+
       }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           console.log(results)
-
+            
           var bounds = new google.maps.LatLngBounds();
           //LatLngBoundsプロパティ：設定すると、ユーザーは指定された範囲内でのみパン及びズームができる。
           
-          // 得られたresultsに対して、取得したい情報を書いていく
           for (var i in results) {
             if (results[0].geometry) {
               // 緯度経度を取得
@@ -98,7 +77,7 @@
               // 取得したタグのvalueにAPIで取得した値を入れる。
               $('#id_lat').val(lat)
               $('#id_lng').val(lng)
-
+              
               // 住所を取得
               var address = results[0].formatted_address;
               // 検索結果地が含まれるように範囲を拡大
@@ -118,51 +97,51 @@
           alert("エラー発生");
         }
       });
-
+      
     });
-
+    
     // 結果クリアーボタン押下時
     document.getElementById('clear').addEventListener('click', function() {
       deleteMakers();
     });
     
   }
-
-  // マーカーのセットを実施する
+  
   function setMarker(setplace) {
-    // 既にあるマーカーを削除
     deleteMakers();
-
-    var iconUrl = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-      marker = new google.maps.Marker({
-        position: setplace,
-        map: map,
-        icon: iconUrl
-      });
+    marker = new google.maps.Marker({
+      position: setplace,
+      map: map,
+    });
+  }
+  
+  function deleteMakers() {
+    if(marker != null){
+      marker.setMap(null);
     }
-
-    //マーカーを削除する
-    function deleteMakers() {
-      if(marker != null){
-        marker.setMap(null);
-      }
-      marker = null;
-    }
-
-    // マーカーへの吹き出しの追加
-    function setInfoW(place, latlng, address) {
-      infoWindow = new google.maps.InfoWindow({
+    marker = null;
+  }
+  
+  // マーカーへの吹き出しの追加
+  function setInfoW(place, latlng, address) {
+    infoWindow = new google.maps.InfoWindow({
       content: address + "<br><br><a href='http://www.google.com/search?q=" + place + "&tbm=isch' target='_blank'>画像検索 by google</a>"
     });
   }
-
+  
   // クリックイベント
   function markerEvent() {
     marker.addListener('click', function() {
       infoWindow.open(map, marker);
     });
   }
-
+  
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap" async defer></script>
+
+<!-- jQueryの組み込み -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
 
 {% endblock %}
