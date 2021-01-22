@@ -39,4 +39,4 @@ class LoginForm(AuthenticationForm):
 class PhotoForm(ModelForm):
   class Meta:
     model = Photo
-    fields = ['place_name', 'lat', 'lng', 'image', 'category']
+    fields = ['image', 'category', 'place_name', 'lat', 'lng']

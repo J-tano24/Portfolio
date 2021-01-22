@@ -3,14 +3,16 @@
 
 <!-- views.pyからcategoryが渡された時、つまりphotos_category関数が実行された時のみ、「検索結果」の文字が表示されるよう設定。 -->
 {% if category %}
-<h2>カテゴリー：{{ category.title }}の検索結果</h2>
+  <h2>カテゴリー：{{ category.title }}の検索結果</h2>
 {% endif %}
 
 {% if 'fav_photos' in request.path %}
-<div style="font-weight:bold; font-size: 28px; margin-bottom: 20px;">
-  お気に入り
-</div>
+  <div style="font-weight:bold; font-size: 28px; margin-bottom: 20px;">
+    お気に入り
+  </div>
 {% endif %}
+
+
 
 <!-- photo_list.htmlを読み込んで写真一覧を表示する。includeと言うテンプレートタグが使える。 -->
 {% include 'app/photos_list.html' %}

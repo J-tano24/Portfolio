@@ -1,11 +1,10 @@
 {% extends 'app/base.html' %}
 {% block content %}
 
-<div>
-  <a href="{% url 'app:index' %}">ホームに戻る</a>
-</div>
 <!-- 画像ファイルをアップロードする際、formタグにenctype="multipart/form-data"をつけないとアップロードできないので要記載。 -->
+
 <form action="{% url 'app:photos_new' %}" id="form" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
   <table>
     <tr>
       <th>画像</th>
@@ -17,9 +16,9 @@
     </tr>
   </table>
   <!-- Djangoの書き方で.as_hiddenで画面上では隠すことができる。 -->
-  {{ form.place_name.as_hidden }}
-  {{ form.lat.as_hidden }}
-  {{ form.lng.as_hidden }}  
+    {{ form.place_name.as_hidden }}
+    {{ form.lat.as_hidden }}
+    {{ form.lng.as_hidden }}  
   <button type="submit" class="btn" id="save">保存</button>
 </form>
 
