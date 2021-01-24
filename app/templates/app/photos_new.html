@@ -41,21 +41,6 @@
   var marker;
   var infoWindow;
 
-  // function inputCheck() {
-  //   // form要素のname属性(frm1)の後に子要素input要素のname属性(lastname)、そのvalueが""だったらという風につなげて参照していく。
-  //   // テキストボックスのvalue属性は入力された文字列を表す。
-  //   if(document.id_place_name.value == "") {
-  //     alert("場所検索を行ってください")
-  //   } else if (document.id_lat.value == "") {
-  //     alert("場所検索を行ってください")
-  //   } else if (document.id_lng.value == "") {
-  //     alert("場所検索を行ってください")
-  //   } else {
-  //     // 上記条件をすべて満たせば、入力内容に問題がないと判断し、データを送信する処理を行う。submit()イベントは、Javascript側から送処理を行いたい時に使用する。
-  //     document.save.submit();
-  //   }
-  // }   
-
 
   function initMap() {
     //マップ初期表示の位置設定
@@ -71,98 +56,29 @@
     });
 
     // 検索実行ボタンが押されたとき
-    document.getElementById('search').addEventListener('click', function() {
-      // 'keyword'にインプットされた値(value)を変数placeに代入。
-      var place = document.getElementById('keyword').value;
-      // ↓検索で入力した値をplace_nameフィールドの値に指定する。
-      $('#id_place_name').val(place)
-      // （Geocoding：名称・地名・住所などの情報を、緯度経度の座標値に変換してくれる）Googleサーバーに送信するGecoderの新しいインスタンスを作成。
-      var geocoder = new google.maps.Geocoder();
-
-      geocoder.geocode({
-        address: place //'keyword'に入力した値がくる。
-      }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          console.log(results)
-
-          var bounds = new google.maps.LatLngBounds();
-          //LatLngBoundsプロパティ：設定すると、ユーザーは指定された範囲内でのみパン及びズームができる。
-          
-          // 得られたresultsに対して、取得したい情報を書いていく
-          for (var i in results) {
-            if (results[0].geometry) {
-              // 緯度経度を取得
-              var latlng = results[0].geometry.location;
-              // latlng.latだけだとconsoleでf()と出てるのが分かる。要は、関数の形(latlng.lat())にすれば、なにか値が取れると推測できる。
-              var lat = latlng.lat()
-              var lng = latlng.lng()
-              // 取得したタグのvalueにAPIで取得した値を入れる。
-              $('#id_lat').val(lat)
-              $('#id_lng').val(lng)
-
-              // 住所を取得
-              var address = results[0].formatted_address;
-              // 検索結果地が含まれるように範囲を拡大
-              bounds.extend(latlng);
-              // マーカーのセット
-              setMarker(latlng);
-              // マーカーへの吹き出しの追加
-              setInfoW(place, latlng, address);
-              // マーカーにクリックイベントを追加
-              markerEvent();
-            }
-          }
-        } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
-          alert("見つかりません");
-        } else {
-          console.log(status);
-          alert("エラー発生");
-        }
-      });
-
+    google.maps.event.addListener(map, 'click', function(e) {
+    var marker = new google.maps.Marker({
+      position: e.latLng,  //イベントの発生した緯度・経度（位置）
+      map: this,  //this は map を意味します
+      animation: google.maps.Animation.DROP
     });
-
-    // 結果クリアーボタン押下時
-    document.getElementById('clear').addEventListener('click', function() {
-      deleteMakers();
+ 
+    var infoWindow = new google.maps.InfoWindow({
+      content: e.latLng.toString() //イベントの発生した位置を toString() で文字列に変換
     });
-    
+ 
+    //マーカーのイベント
+    google.maps.event.addListener(marker, 'click', function() {
+      infoWindow.open(map, marker); //marker の位置に情報ウィンドウを表示
+    });
+ 
+    //情報ウィンドウののイベント
+    google.maps.event.addListener(infoWindow, 'closeclick', function() {
+      marker.setMap(null);  //マーカーを削除
+    });
+  });
   }
-
-  // マーカーのセットを実施する
-  function setMarker(setplace) {
-    // 既にあるマーカーを削除
-    deleteMakers();
-
-    var iconUrl = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-      marker = new google.maps.Marker({
-        position: setplace,
-        map: map,
-        icon: iconUrl
-      });
-    }
-
-    //マーカーを削除する
-    function deleteMakers() {
-      if(marker != null){
-        marker.setMap(null);
-      }
-      marker = null;
-    }
-
-    // マーカーへの吹き出しの追加
-    function setInfoW(place, latlng, address) {
-      infoWindow = new google.maps.InfoWindow({
-      content: address + "<br><br><a href='http://www.google.com/search?q=" + place + "&tbm=isch' target='_blank'>画像検索 by google</a>"
-    });
-  }
-
-  // クリックイベント
-  function markerEvent() {
-    marker.addListener('click', function() {
-      infoWindow.open(map, marker);
-    });
-  }
+     
 
 </script>
 
