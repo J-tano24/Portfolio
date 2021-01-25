@@ -35,7 +35,6 @@ class LoginForm(AuthenticationForm):
             field.widget.attrs['placeholder'] = field.label  # placeholderにフィールドのラベルを入れる
 
 
-
 class PhotoForm(ModelForm):
   class Meta:
     model = Photo

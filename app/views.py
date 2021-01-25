@@ -21,20 +21,21 @@ def index(request):
   photos = Photo.objects.all().order_by('-created_at')
   return render(request, 'app/index.html', {'photos': photos})
 
+# 以下、クラスで定義しているViewは、Djangoのツールになる。
 class Login(LoginView):
     form_class = LoginForm
     template_name = 'app/login.html'
+    # 他関数でreturn render(request, 'app/index.html', {'photos': photos})としているのを上記２行で記載。
 
 class Logout(LogoutView):
     template_name = 'app/top.html'
 
 class UserCreate(generic.CreateView):
-    # """ユーザー仮登録"""
-    template_name = 'app/user_create.html'
+    template_name = 'app/user_create.html' 
     form_class = CustomUserCreationForm
 
-    def form_valid(self, form):
-        # """仮登録と本登録用メールの発行."""
+    # form_valid関数は，POSTされたときに呼ばれる関数。if form.is_valid()
+    def form_valid(self, form): 
         # 仮登録と本登録の切り替えは、is_active属性を使うと簡単、is_active=Falseで仮登録。
         # 退会処理も、is_activeをFalseにするだけにしておくと捗ります。
         user = form.save(commit=False)
@@ -43,26 +44,27 @@ class UserCreate(generic.CreateView):
 
         # アクティベーションURLの送付
         current_site = get_current_site(self.request)
-        domain = current_site.domain
+        domain = current_site.domain 
+        # URLを生成するのに必要な情報をcontextにまとめる。
         context = {
-            'protocol': self.request.scheme,
-            'domain': domain,
+            'protocol': self.request.scheme, # http
+            'domain': domain, # 127.0.0.1;8000
             'token': dumps(user.pk),
             'user': user,
         }
 
+        # Djangoの設定で、render引数のURLパスを指定するときは、app/template/に続けてかく必要があるため、下記の場合、mail_templateは、app/template/appの中に入れる必要がある。 
         subject = render_to_string('app/mail_template/create/subject.txt', context)
         message = render_to_string('app/mail_template/create/message.txt', context)
-
+        
+        # email_userは、userオブジェクト（AbstractUser）のメソッド。条件の引数を指定すれば、メールを送付してくれる。
         user.email_user(subject, message)
         return redirect('app:user_create_done')
 
 class UserCreateDone(generic.TemplateView):
-    # """ユーザー仮登録したよ"""
     template_name = 'app/user_create_done.html'
 
 class UserCreateComplete(generic.TemplateView):
-    """メール内URLアクセス後のユーザー本登録"""
     template_name = 'app/user_create_complete.html'
     timeout_seconds = getattr(settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
 
@@ -101,36 +103,20 @@ def users_detail(request, pk):
   photos = user.photo_set.all().order_by('-created_at')
   return render(request, 'app/users_detail.html', {'user':user, 'photos':photos})
 
-
-
-# def signup(request):
-#   if request.method == 'POST':
-#     form = CustomUserCreationForm(request.POST)
-#     if form.is_valid():
-#       new_user = form.save()
-#       input_username = form.cleaned_data['username']
-#       input_email = form.cleaned_data['email'] 
-#       input_password = form.cleaned_data['password1'] 
-#       new_user = authenticate(username=input_username, email=input_email, password=input_password)
-#       if new_user is not None:
-#         login(request, new_user) 
-#         return redirect('app:index')
-#   else:
-#     form = CustomUserCreationForm()
-#     return render(request, 'app/signup.html', {'form': form})
-
-
 @login_required
 def photos_new(request):
+  # breakpoint() この関数が実行されているか検証
   if request.method == "POST":
     form = PhotoForm(request.POST, request.FILES)
+    breakpoint() #POSTされているか検証
     if form.is_valid():
-      # commit=Falseにすることで、DBには一旦保存しない。この段階でphotoインスタンスのuserフィールドに入れる値が決まっていないから。
+      breakpoint() #form.is_validになっているか検証
       photo = form.save(commit=False)
       photo.post_user = request.user
       photo.save()
       messages.success(request, "投稿が完了しました！")
     return redirect('app:users_detail', pk=request.user.pk)
+    # ↑このreturnは、129行目が実行されれば、trueでもfalseでも実行される。
   else:
     form = PhotoForm()
   return render(request, 'app/photos_new.html', {'form': form})

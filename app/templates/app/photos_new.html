@@ -45,12 +45,6 @@
       mapTypeId: 'hybrid',
     });
 
-    // 地図上をクリックした時
-    
-    // google.map.event.addEventListener(map, 'click', function(e){
-    // var marker = new google.maps.Marker({
-    // })
-
     // 検索実行ボタンが押されたとき
     document.getElementById('search').addEventListener('click', function() {
       // var place = document.getElementById('keyword').value;
@@ -115,6 +109,7 @@
     marker = new google.maps.Marker({
       position: setplace,
       map: map,
+      animation: google.maps.Animation
     });
   }
   
