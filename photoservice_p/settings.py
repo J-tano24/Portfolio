@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
-    'users'
+    'users',
+    'django_cleanup',
 ]
 
 # usersアプリケーション内で設定するUserというモデルをこのプロジェクトのUserモデルとして利用するという意味。
