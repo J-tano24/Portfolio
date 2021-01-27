@@ -129,6 +129,7 @@ def photos_detail(request, pk):
 def photos_delete(request, pk):
   photo = get_object_or_404(Photo, pk=pk)
   photo.delete()
+  messages.success(request, "１件の投稿が削除されました。")
   return redirect('app:users_detail', request.user.id)
 
 def photos_category(request, category):
