@@ -1,17 +1,33 @@
 {% extends 'app/base.html' %}
 {% block content %}
 
-<form action="" method="POST">
-  {{ form.non_field_errors }}
-  {% for field in form %}
-  <div class="form-group">
-      <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
-      {{ field }}
-      {{ field.errors }}
-  </div>
-  {% endfor %}
-  {% csrf_token %}
-  <button type="submit" class="btn btn-primary btn-lg">送信</button>
-</form>
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10 col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <form action="" method="POST">{% csrf_token %}
+          {{ form.non_field_errors }}
+          {% for field in form %}
+            <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+            {{ field }}
+            {{ field.errors }}
+
+            {% if field.help_text %}
+            <small class="form-text text-muted">
+              {{ field.help_text|safe }}  
+            </small>
+            {% endif %}
+          {% endfor %}
+            <br>
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px;">登録</button>
+        </form>
+      </div>
+
+      <div class="card-footer text-muted text-center">
+        Already have an account? <a href="{% url 'app:login' %}">Log in</a>
+      </div>
+    </div>
+  </div>   
+</div>
 
 {% endblock %}

@@ -13,26 +13,30 @@
     transform: translateY(-10px);
     transition-duration: 0.5s;
   }
+  .container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .item {
+    display: flex;
+    width: calc(33.3% - 10px);
+    margin: 3px;
+
+  }
+
  
 </style>
 
-<div class="d-flex">
-  {% for photo in photos %}
-    <div class="" >
-      <a href="{% url 'app:photos_detail' photo.id %}">
-        <span class="border-left-0" >
-          <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border border-white img-thumbnail " >
-        </span>
-      </a>
-      <!-- <div class="" >
-        <a href="{% url 'app:photos_category' category=photo.category %}" class="category">{{ photo.category }}</a>
-        <br>
-        <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
-      </div> -->
-    </div>
-  {% endfor %}
-</div>
-
+  <div class="container">
+    {% for photo in photos %}
+      <div class="item">
+          <a href="{% url 'app:photos_detail' photo.id %}">
+              <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border border-white img-thumbnail " >
+          </a>
+      </div>
+    {% endfor %}
+  </div>
 <script>
 
   // <button onclick="open(`photo_enlarge.html`, null, `width=500, height=600`);"></button>

@@ -2,43 +2,45 @@
 
 {% block content %}
 
-<div class="photo-detail">
-  <span class="border-left-0" >
-    <img src="{{ photo.image.url }}" alt="Responsive image" class="img-thumbnail shadow p-2 mb-3 bg-white rounded">
-  </span>
-  <div class="photo-info" style="display: flex;float:right;">
-    <p>投稿者：</p>
-    <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
-  </div>
+  <div class="photo-container" >
+    <div class="photo-detail">
+      <span class="border-left-0" >
+        <img src="{{ photo.image.url }}" alt="Responsive image" class="img-thumbnail shadow p-2 mb-3 bg-white rounded">
+      </span>
+      <div class="photo-info" style="display: flex;float:right;">
+        <p>投稿者：</p>
+        <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
+      </div>
 
-  <h3 id="place_name">{{ photo.place_name }}</h3>
+      <h3 id="place_name">{{ photo.place_name }}</h3>
 
-  <div class="point-fav-del-section" style="display: flex;">
-    <!-- お気に入りボタン -->
-    {% if request.user.is_authenticated %}
-    <form action="{% url 'app:fav_photos_status' %}" method="post">{% csrf_token %}
-      <input type="hidden" name="photo_id" value="{{ photo.id }}">
-      {% if photo in user.fav_photos.all %}
-      <input type="submit" name="submit" class="btn btn-warning" value="お気に入り"/> 
-      {% else %}
-      <input type="submit" name="submit" class="btn btn-outline-warning" value=" お気に入り" />
-      {% endif %}
-    </form>
-    {% endif %}
+      <div class="point-fav-del-section" style="display: flex;">
+        <!-- お気に入りボタン -->
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'app:fav_photos_status' %}" method="post">{% csrf_token %}
+          <input type="hidden" name="photo_id" value="{{ photo.id }}">
+          {% if photo in user.fav_photos.all %}
+          <input type="submit" name="submit" class="btn btn-warning" value="お気に入り"/> 
+          {% else %}
+          <input type="submit" name="submit" class="btn btn-outline-warning" value=" お気に入り" />
+          {% endif %}
+        </form>
+        {% endif %}
 
-    <!-- 削除ボタン -->
-    {% if request.user == photo.post_user %}
-    <form method="post" action="{% url 'app:photos_delete' photo.id %}">{% csrf_token %}
-      <button class="btn btn-primary" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
-    </form>
-    {% endif %}
+        <!-- 削除ボタン -->
+        {% if request.user == photo.post_user %}
+        <form method="post" action="{% url 'app:photos_delete' photo.id %}">{% csrf_token %}
+          <button class="btn btn-primary" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
+        </form>
+        {% endif %}
 
-  </div>
+      </div>
+    </div>
 
   <!-- 以下マップで詳細を表示 -->
-  <div id="gmap" style="width: 100%; height: 500px; margin-top: 20px;"></div>
+    <div id="gmap" style="width: 100%; height: 500px; margin-top: 20px;"></div>
 
-  
+  </div>
   <script>
 
     var map;
