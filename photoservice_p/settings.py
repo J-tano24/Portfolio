@@ -26,7 +26,7 @@ SECRET_KEY = 'p1mp-=ipk@g%u13mfw7_qu9c$4g^fc2xc!!udzqd_eph_ene-e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django_cleanup',
 ]
 
-# usersアプリケーション内で設定するUserというモデルをこのプロジェクトのUserモデルとして利用するという意味。
 AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [

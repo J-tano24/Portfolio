@@ -2,11 +2,17 @@
 
 <style>
 
+
   .photo-container {
     display: inline-block;
     justify-content: space-between;
     flex-wrap: wrap;
   }
+  .photo-container img{
+    height: 300px;
+    object-fit: cover;
+  }
+
   .open {
     display: inline-block;
     width: calc(33.3% - 10px);
@@ -36,8 +42,6 @@
     {% endfor %}
   </div>
 
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
   // $(function(){
   //   $(".open").click(function(){
