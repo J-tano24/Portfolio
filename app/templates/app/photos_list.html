@@ -1,44 +1,50 @@
 <!-- index.htmlから読み込む -->
 
 <style>
-  .border-left-0 img{
-    transition-duration: 0.5s;
-  }
-  .border-left-0 img{
-    width: 100%;
-    cursor: pointer;
-  }
-  .border-left-0 img:hover{
-    box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
-    transform: translateY(-10px);
-    transition-duration: 0.5s;
-  }
-  .container {
-    display: flex;
+
+  .photo-container {
+    display: inline-block;
     justify-content: space-between;
     flex-wrap: wrap;
   }
-  .item {
-    display: flex;
+  .open {
+    display: inline-block;
     width: calc(33.3% - 10px);
     margin: 3px;
-
+    cursor: pointer;
+  }
+  .open:hover {
+    opacity: 0.7;
+  }
+  .mapArea {
+    display: none;
+    text-align: center;
+    width: 100%;
+    color: #666;
   }
 
- 
 </style>
 
-  <div class="container">
+  <div class="photo-container">
     {% for photo in photos %}
-      <div class="item">
+      <div class="open">
           <a href="{% url 'app:photos_detail' photo.id %}">
-              <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border border-white img-thumbnail " >
+            <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border border-white img-thumbnail" >
           </a>
       </div>
+      <div class="mapArea">{{photo.post_user}}</div>
     {% endfor %}
   </div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
-
-  // <button onclick="open(`photo_enlarge.html`, null, `width=500, height=600`);"></button>
-
+  // $(function(){
+  //   $(".open").click(function(){
+  //     $($(this).next(".mapArea")).animate(
+  //       {height: "toggle", opacity: "toggle"},
+  //       "nomal"
+  //     );
+  //   });
+  // });
 </script>

@@ -15,6 +15,7 @@ class CustomUserCreationForm(UserCreationForm):
       super().__init__(*args, **kwargs)
       for field in self.fields.values():
           field.widget.attrs['class'] = 'form-control'
+          field.widget.attrs['placeholder'] = field.label
 
   def clean_username(self):
       username = self.cleaned_data['username']
