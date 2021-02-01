@@ -1,3 +1,23 @@
 body {
   background-image: url(../img/criss-cross.png);
 }
+
+/* photo_detail */
+.photo-detail {
+  display: flex;
+  float: right;
+  padding-bottom: 10px;
+}
+.photo-info {
+  display: flex;
+  float: right;
+}
+h4 {
+  font-weight: 900;
+  line-height: normal;
+}
+.gmap {
+  width: 100%;
+  height: 500px;
+  margin-top: 10px;
+}
