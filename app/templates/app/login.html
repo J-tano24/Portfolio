@@ -1,20 +1,33 @@
 {% extends 'app/base.html' %}
-
 {% block content %}
 
-<form class="form-signin" method="post">{% csrf_token %}
-  {% if form.errors %}
-    <p>ユーザー名かパスワードが間違っています。</p> 
-  {% endif %}
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-6 col-sm-8">
+    <div class="card">
+      <div class="card-body">
+        <form action="{% url 'app:login' %}" method="POST">{% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            {{ field }}
+            {{ field.errors }}
+            <br>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block" >ログイン</button>
+        </form>
+      </div>
 
-  <h2>ログイン</h2>
-  <label>ユーザー名</label>
-  <input name="username">
-  <br>
-  <label>パスワード</label>
-  <input type="password" name="password">
-  <br>
-  <input type="submit" value="ログイン">
+      <div class="card-footer text-muted text-center">
+        会員でない方は登録して下さい?
+        <a href="{% url 'app:user_create' %}">会員登録</a>
+      </div>
+    </div>
+    <div class="text-center py-2">
+      <small>
+        <a href="#" class="text-muted">Forgot your password?</a>
+      </small>
+    </div>
+  </div>
+</div>
 </form>
 
 {% endblock %}

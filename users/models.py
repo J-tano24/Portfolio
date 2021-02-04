@@ -59,3 +59,8 @@ class User(AbstractBaseUser, PermissionsMixin):
   class Meta:
     verbose_name = _('user')
     verbose_name_plural = _('users')
+
+  # email_user関数は、AbstractUserの中で定義されている関数のため、AbstractBaseUserでモデルを作っているときは、関数を定義してやる必要がある。https://github.com/django/django/blob/master/django/contrib/auth/models.py
+  def email_user(self, subject, message, from_email=None, **kwargs):
+    """Send an email to this user."""
+    send_mail(subject, message, from_email, [self.email], **kwargs)

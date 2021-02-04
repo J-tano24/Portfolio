@@ -1,165 +1,48 @@
 {% extends 'app/base.html' %}
+{% load static %}
 
 {% block content %}
 
-<div class="photo-detail">
-  <span class="border-left-0" >
-    <img src="{{ photo.image.url }}" alt="Responsive image" class="img-thumbnail shadow p-3 mb-5 bg-white rounded">
-  </span>
-  <div class="photo-info">
-    <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
-  </div>
-
-  <h2>{{ photo.place_name }}</h2>
-  
-  <div class="point-fav-section">
-    {% if request.user.is_authenticated %}
-      <form action="{% url 'app:fav_photos_status' %}" method="post">{% csrf_token %}
-        <input type="hidden" name="photo_id" value="{{ photo.id }}">
-        {% if photo in user.fav_photos.all %}
-          <input type="submit" name="submit" class="fav_button" value="お気に入りから外す"/> 
-        {% else %}
-          <input type="submit" name="submit" class="fav_button" value=" お気に入りに入れる" />
-        {% endif %}
-      </form>
+<div class="photo-container" >
+  <div class="photo-detail">
+    <!-- お気に入りボタン --> 
+    {% if not request.user == photo.post_user %}
+    <form action="{% url 'app:fav_photos_status' %}" method="post">{% csrf_token %}
+      <input type="hidden" name="photo_id" value="{{ photo.id }}">
+      {% if photo in user.fav_photos.all %}
+      <input type="submit" name="submit" class="btn btn-warning" value="お気に入り"/> 
+      {% else %}
+      <input type="submit" name="submit" class="btn btn-outline-warning" value=" お気に入り" />
+      {% endif %}
+    </form>
+    {% endif %}
+    
+    <!-- 削除ボタン -->
+    {% if request.user == photo.post_user %}
+    <form method="post" action="{% url 'app:photos_delete' photo.id %}">{% csrf_token %}
+      <button class="btn btn-primary" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
+    </form>
     {% endif %}
   </div>
 
-  <!-- 以下マップで詳細を表示 -->
-  <div id="target" style="width: 900px; height: 700px;"></div>
+  <h4 id="place_name">{{ photo.place_name }}</h3>
 
-  <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap" async defer></script>
+  <img src="{{ photo.image.url }}" alt="Responsive image" class="img-thumbnail shadow p-2 mb-3 bg-white rounded">
 
-  <!-- jQueryの組み込み -->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <div class="photo-info">
+    <p>投稿者：</p>
+    <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
+  </div>
 
-  <script>
-
-    var map;
-    var marker;
-    var infoWindow;
-
-    function initMap() {;
-      // var target = $("#target") ←jQueryの書き方（targetの値を取得）
-      var centerp = {lat: 52.215933, lng: 19.134422};
-      var target = document.getElementById('target');
-      //マップ表示
-      map = new google.maps.Map(target, {
-        center: centerp,
-        zoom: 4,
-      });
-
-      // 検索実行ボタンが押されたとき
-      document.getElementById('search').addEventListener('click', function() {
-        // 'keyword'にインプットされた値(value)を変数placeに代入。
-        var place = document.getElementById('keyword').value;
-        // ↓検索で入力した値をplace_nameフィールドの値に指定する。
-        $('#id_place_name').val(place)
-        // （Geocoding：名称・地名・住所などの情報を、緯度経度の座標値に変換してくれる）Googleサーバーに送信するGecoderの新しいインスタンスを作成。
-        var geocoder = new google.maps.Geocoder();
-
-        geocoder.geocode({
-          address: place //'keyword'に入力した値がくる。
-        }, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-            console.log(results)
-
-            var bounds = new google.maps.LatLngBounds();
-            //LatLngBoundsプロパティ：設定すると、ユーザーは指定された範囲内でのみパン及びズームができる。
-            
-            // 得られたresultsに対して、取得したい情報を書いていく
-            for (var i in results) {
-              if (results[0].geometry) {
-                // 緯度経度を取得
-                var latlng = results[0].geometry.location;
-                // 以下では↑のlatlngを使用。latlng.latだけだとconsoleでf()と出てるのが分かる。要は、関数の形(latlng.lat())にすれば、なにか値が取れることが分かる。
-                var lat = latlng.lat()
-                var lng = latlng.lng()
-                // input_lat.value = lat
-                // input_lng.value = lng
-                // 取得したタグのvalueにAPIで取得した値を入れる。
-                $('#id_lat').val(lat)
-                $('#id_lng').val(lng)
-
-                // 住所を取得
-                var address = results[0].formatted_address;
-                // 検索結果地が含まれるように範囲を拡大
-                bounds.extend(latlng);
-                // マーカーのセット
-                setMarker(latlng);
-                // マーカーへの吹き出しの追加(引数は、上部で定義)
-                setInfoW(place, latlng, address);
-                // マーカーにクリックイベントを追加
-                markerEvent();
-              }
-            }
-          } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
-            alert("見つかりません");
-          } else {
-            console.log(status);
-            alert("エラー発生");
-          }
-        });
-
-      });
-
-      // 結果クリアーボタン押下時
-      document.getElementById('clear').addEventListener('click', function() {
-        deleteMakers();
-      });
-
-    }
-
-    // マーカーのセットを実施する
-    function setMarker(setplace) {
-      // 既にあるマーカーを削除
-      deleteMakers();
-
-      var iconUrl = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-        marker = new google.maps.Marker({
-          position: setplace,
-          map: map,
-          icon: iconUrl
-        });
-      }
-
-      //マーカーを削除する
-      function deleteMakers() {
-        if(marker != null){
-          marker.setMap(null);
-        }
-        marker = null;
-      }
-
-      // マーカーへの吹き出しの追加
-      function setInfoW(place, latlng, address) {
-        infoWindow = new google.maps.InfoWindow({
-        content: address + "<br><br><a href='http://www.google.com/search?q=" + place + "&tbm=isch' target='_blank'>画像検索 by google</a>"
-      });
-    }
-
-    // クリックイベント
-    function markerEvent() {
-      marker.addListener('click', function() {
-        infoWindow.open(map, marker);
-      });
-    }
-
-  </script>
-  
-
-  <!-- 削除ボタン -->
-  <!-- アクセスしたユーザー＝この写真を投稿したユーザーの時だけ削除btnが表示されればいいのでその条件を書く。 -->
-  {% if request.user == photo.user %}
-    <form method="post" action="{% url 'app:photos_delete' photo.id %}">{% csrf_token %}
-      <button class="btn" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
-    </form>
-  {% endif %}
-
+  <div id="gmap" class="gmap"></div>
 
 </div>
 
+<!-- GoogleAPI -->
+<script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap" async defer></script>
 
+<!-- jsファイルの読み込み -->
+<script src="{% static 'js/detail.js' %}"></script>
 
 {% endblock %}
 
