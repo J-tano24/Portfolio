@@ -1,54 +1,9 @@
 <!-- index.htmlから読み込む -->
 
-<style>
-
-
-  .photo-container {
-    display: inline-block;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  .photo-container img{
-    height: 300px;
-    object-fit: cover;
-  }
-
-  .open {
-    display: inline-block;
-    width: calc(33.3% - 10px);
-    margin: 3px;
-    cursor: pointer;
-  }
-  .open:hover {
-    opacity: 0.7;
-  }
-  .mapArea {
-    display: none;
-    text-align: center;
-    width: 100%;
-    color: #666;
-  }
-
-</style>
-
-  <div class="photo-container">
-    {% for photo in photos %}
-      <div class="open">
-          <a href="{% url 'app:photos_detail' photo.id %}">
-            <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border border-white img-thumbnail" >
-          </a>
-      </div>
-      <div class="mapArea">{{photo.post_user}}</div>
-    {% endfor %}
-  </div>
-
-<script>
-  // $(function(){
-  //   $(".open").click(function(){
-  //     $($(this).next(".mapArea")).animate(
-  //       {height: "toggle", opacity: "toggle"},
-  //       "nomal"
-  //     );
-  //   });
-  // });
-</script>
+<div class="photos-list">
+  {% for photo in photos %}
+    <a href="{% url 'app:photos_detail' photo.id %}">
+      <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border border-white img-thumbnail" >
+    </a>
+  {% endfor %}
+</div>

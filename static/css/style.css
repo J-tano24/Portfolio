@@ -34,3 +34,21 @@ b {
 .data-post {
   text-align: right;
 }
+
+/* photos_list */
+.photos-list {
+  display: inline-block;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.photos-list img{
+  height: 300px;
+  object-fit: cover;
+  display: inline-block;
+  width: calc(33.3% - 10px);
+  margin: 3px;
+  cursor: pointer;
+}
+.open:hover {
+  opacity: 0.7;
+}

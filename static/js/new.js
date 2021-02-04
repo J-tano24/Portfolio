@@ -30,8 +30,8 @@ function initMap() {
         for (var i in results) {
           if (results[0].geometry) {
             var latlng = results[0].geometry.location;
-            var lat = latlng.lat()
-            var lng = latlng.lng()
+            var lat = latlng.lat().toFixed(7)
+            var lng = latlng.lng().toFixed(7)
             $('#id_lat').val(lat)
             $('#id_lng').val(lng)
             
