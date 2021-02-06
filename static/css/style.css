@@ -24,9 +24,14 @@ h4 {
 }
 
 /* photos_new */
+table {
+  margin-bottom: 10px;
+}
+
 b {
   float: left;
   padding-right: 10px;
+  
 }
 .sub {
   margin-bottom: 0rem;
@@ -52,3 +57,5 @@ b {
 .open:hover {
   opacity: 0.7;
 }
+
+

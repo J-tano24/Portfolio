@@ -1,10 +1,9 @@
 {% extends 'app/base.html' %}
 {% load static %}
-
 {% block content %}
 
 <form action="{% url 'app:photos_new' %}" id="form" method="POST" enctype="multipart/form-data">{% csrf_token %}
-  
+
   <table>
     <tr>
       <th>Photo</th>
@@ -18,8 +17,8 @@
 
   {{ form.place_name.as_hidden }}
   {{ form.lat.as_hidden }}
-  {{ form.lng.as_hidden }}  
-    
+  {{ form.lng.as_hidden }}
+
   <b>Google Maps - 場所検索</b>
   <p class="sub">※ここで検索する値は、名称として投稿画面で表示されます。</p>
   <input type="text" id="keyword">
@@ -32,11 +31,12 @@
   </div>
 
 </form>
- 
-<!-- GoogleAPI -->
-<script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap" async defer></script>
 
-  
+<!-- GoogleAPI -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap"
+  async defer></script>
+
 <!-- jsファイルの読み込み -->
 <script src="{% static 'js/new.js' %}"></script>
 
