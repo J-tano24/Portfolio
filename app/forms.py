@@ -1,10 +1,9 @@
 # カスタムユーザーモデルを参照するには、get_user_model関数をインポート
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 from .models import Photo
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 
 class CustomUserCreationForm(UserCreationForm):
   class Meta:
@@ -27,14 +26,31 @@ class CustomUserCreationForm(UserCreationForm):
       get_user_model().objects.filter(email=email, is_active=False).delete()
       return email
 
-
 class LoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
-            field.widget.attrs['placeholder'] = field.label  # placeholderにフィールドのラベルを入れる
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    for field in self.fields.values():
+      field.widget.attrs['class'] = 'form-control'
+      # placeholderにフィールドのラベルを入れる
+      field.widget.attrs['placeholder'] = field.label
 
+class MyPasswordChangeForm(PasswordChangeForm):
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    for field in self.fields.values():
+      field.widget.attrs['class'] = 'form-control'
+
+class MyPasswordResetForm(PasswordResetForm):
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    for field in self.fields.values():
+      field.widget.attrs['class'] = 'form-control'
+
+class MySetPasswordForm(SetPasswordForm):
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    for field in self.fields.values():
+      field.widget.attrs['class'] = 'form-control'
 
 class PhotoForm(ModelForm):
   class Meta:

@@ -1,14 +1,14 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.contrib.auth import get_user_model, authenticate, login 
-from .forms import CustomUserCreationForm, LoginForm
+from .forms import CustomUserCreationForm, LoginForm, MyPasswordChangeForm, MyPasswordResetForm, MySetPasswordForm
 from .models import Photo, Category
 from .forms import PhotoForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import (
-    LoginView, LogoutView
+    LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView 
 )
 from django.views import generic
 from django.conf import settings
@@ -16,16 +16,13 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.http import Http404, HttpResponseBadRequest
 from django.template.loader import render_to_string
-  
-def index(request):
-  photos = Photo.objects.all().order_by('-created_at')
-  return render(request, 'app/index.html', {'photos': photos})
+from django.urls import reverse_lazy
 
-# 以下、クラスで定義しているViewは、Djangoのツールになる。
+User = get_user_model()
+
 class Login(LoginView):
     form_class = LoginForm
     template_name = 'app/login.html'
-    # 他関数でreturn render(request, 'app/index.html', {'photos': photos})としているのを上記２行で記載。
 
 class Logout(LogoutView):
     template_name = 'app/top.html'
@@ -34,15 +31,11 @@ class UserCreate(generic.CreateView):
     template_name = 'app/user_create.html' 
     form_class = CustomUserCreationForm
 
-    # form_valid関数は，POSTされたときに呼ばれる関数。if form.is_valid()
     def form_valid(self, form): 
-        # 仮登録と本登録の切り替えは、is_active属性を使うと簡単、is_active=Falseで仮登録。
-        # 退会処理も、is_activeをFalseにするだけにしておくと捗ります。
         user = form.save(commit=False)
         user.is_active = False
         user.save()
 
-        # アクティベーションURLの送付
         current_site = get_current_site(self.request)
         domain = current_site.domain 
         # URLを生成するのに必要な情報をcontextにまとめる。
@@ -66,7 +59,7 @@ class UserCreateDone(generic.TemplateView):
 
 class UserCreateComplete(generic.TemplateView):
     template_name = 'app/user_create_complete.html'
-    timeout_seconds = getattr(settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
+    timeout_seconds = getattr(settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)
 
     def get(self, request, **kwargs):
         """tokenが正しければ本登録."""
@@ -97,6 +90,36 @@ class UserCreateComplete(generic.TemplateView):
                     return super().get(request, **kwargs)
 
         return HttpResponseBadRequest()
+
+class PasswordChange(PasswordChangeView):
+  form_class = MyPasswordChangeForm
+  success_url = reverse_lazy('app:password_change_done')
+  template_name = 'app/password_change.html'
+
+class PasswordChangeDone(PasswordChangeDoneView):
+  template_name = 'app/password_change_done.html'
+
+class PasswordReset(PasswordResetView):
+  subject_template_name = 'app/mail_template/password_reset/subject.txt'
+  email_template_name = 'app/mail_template/password_reset/message.txt'
+  template_name = 'app/password_reset_form.html'
+  form_class = MyPasswordResetForm
+  success_url = reverse_lazy('app:password_reset_done')
+
+class PasswordResetDone(PasswordResetDoneView):
+  template_name = 'app/password_reset_done.html'
+
+class PasswordResetConfirm(PasswordResetConfirmView):
+  form_class = MySetPasswordForm
+  success_url = reverse_lazy('app:password_reset_complete')
+  template_name = 'app/password_reset_confirm.html'
+
+class PasswordResetComplete(PasswordResetCompleteView):
+  template_name = 'app/password_reset_complete.html'
+
+def index(request):
+    photos = Photo.objects.all().order_by('-created_at')
+    return render(request, 'app/index.html', {'photos': photos})
 
 def users_detail(request, pk):
   user = get_object_or_404(get_user_model(), pk=pk)
