@@ -18,14 +18,18 @@ from django.http import Http404, HttpResponseBadRequest
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 
+
 User = get_user_model()
+
 
 class Login(LoginView):
     form_class = LoginForm
     template_name = 'app/login.html'
 
+
 class Logout(LogoutView):
     template_name = 'app/top.html'
+
 
 class UserCreate(generic.CreateView):
     template_name = 'app/user_create.html' 
@@ -41,21 +45,21 @@ class UserCreate(generic.CreateView):
         # URLを生成するのに必要な情報をcontextにまとめる。
         context = {
             'protocol': self.request.scheme, # http
-            'domain': domain, # 127.0.0.1;8000
+            'domain': domain,
             'token': dumps(user.pk),
             'user': user,
         }
 
-        # Djangoの設定で、render引数のURLパスを指定するときは、app/template/に続けてかく必要があるため、下記の場合、mail_templateは、app/template/appの中に入れる必要がある。 
         subject = render_to_string('app/mail_template/create/subject.txt', context)
         message = render_to_string('app/mail_template/create/message.txt', context)
-        
-        # email_userは、userオブジェクト（AbstractUser）のメソッド。条件の引数を指定すれば、メールを送付してくれる。
+
         user.email_user(subject, message)
         return redirect('app:user_create_done')
 
+
 class UserCreateDone(generic.TemplateView):
     template_name = 'app/user_create_done.html'
+
 
 class UserCreateComplete(generic.TemplateView):
     template_name = 'app/user_create_complete.html'
@@ -91,90 +95,104 @@ class UserCreateComplete(generic.TemplateView):
 
         return HttpResponseBadRequest()
 
+
 class PasswordChange(PasswordChangeView):
-  form_class = MyPasswordChangeForm
-  success_url = reverse_lazy('app:password_change_done')
-  template_name = 'app/password_change.html'
+    form_class = MyPasswordChangeForm
+    success_url = reverse_lazy('app:password_change_done')
+    template_name = 'app/password_change.html'
+
 
 class PasswordChangeDone(PasswordChangeDoneView):
-  template_name = 'app/password_change_done.html'
+   template_name = 'app/password_change_done.html'
+
 
 class PasswordReset(PasswordResetView):
-  subject_template_name = 'app/mail_template/password_reset/subject.txt'
-  email_template_name = 'app/mail_template/password_reset/message.txt'
-  template_name = 'app/password_reset_form.html'
-  form_class = MyPasswordResetForm
-  success_url = reverse_lazy('app:password_reset_done')
+    subject_template_name = 'app/mail_template/password_reset/subject.txt'
+    email_template_name = 'app/mail_template/password_reset/message.txt'
+    template_name = 'app/password_reset_form.html'
+    form_class = MyPasswordResetForm
+    success_url = reverse_lazy('app:password_reset_done')
+
 
 class PasswordResetDone(PasswordResetDoneView):
-  template_name = 'app/password_reset_done.html'
+    template_name = 'app/password_reset_done.html'
+
 
 class PasswordResetConfirm(PasswordResetConfirmView):
-  form_class = MySetPasswordForm
-  success_url = reverse_lazy('app:password_reset_complete')
-  template_name = 'app/password_reset_confirm.html'
+    form_class = MySetPasswordForm
+    success_url = reverse_lazy('app:password_reset_complete')
+    template_name = 'app/password_reset_confirm.html'
+
 
 class PasswordResetComplete(PasswordResetCompleteView):
-  template_name = 'app/password_reset_complete.html'
+    template_name = 'app/password_reset_complete.html'
+
 
 def index(request):
     photos = Photo.objects.all().order_by('-created_at')
     return render(request, 'app/index.html', {'photos': photos})
 
+
 def users_detail(request, pk):
-  user = get_object_or_404(get_user_model(), pk=pk)
-  photos = user.photo_set.all().order_by('-created_at')
-  return render(request, 'app/users_detail.html', {'user':user, 'photos':photos})
+    user = get_object_or_404(get_user_model(), pk=pk)
+    photos = user.photo_set.all().order_by('-created_at')
+    return render(request, 'app/users_detail.html', {
+      'user':user, 'photos':photos
+      })
+
 
 @login_required
 def photos_new(request):
-  # breakpoint() この関数が実行されているか検証
-  if request.method == "POST":
-    form = PhotoForm(request.POST, request.FILES)
-    breakpoint() #POSTされているか検証
-    if form.is_valid():
-      breakpoint() #form.is_validになっているか検証
-      photo = form.save(commit=False)
-      photo.post_user = request.user
-      photo.save()
-      messages.success(request, "投稿が完了しました！")
-    return redirect('app:users_detail', pk=request.user.pk)
-    # ↑このreturnは、129行目が実行されれば、trueでもfalseでも実行される。
-  else:
-    form = PhotoForm()
-  return render(request, 'app/photos_new.html', {'form': form})
+    if request.method == "POST":
+        form = PhotoForm(request.POST, request.FILES)
+        breakpoint() #POSTされているか検証
+        if form.is_valid():
+            breakpoint() #form.is_validになっているか検証
+            photo = form.save(commit=False)
+            photo.post_user = request.user
+            photo.save()
+            messages.success(request, "投稿が完了しました！")
+        return redirect('app:users_detail', pk=request.user.pk)
+    else:
+        form = PhotoForm()
+    return render(request, 'app/photos_new.html', {'form': form})
+
 
 def photos_detail(request, pk):
-  photo = get_object_or_404(Photo, pk=pk)
-  return render(request, 'app/photos_detail.html', {'photo': photo})
+    photo = get_object_or_404(Photo, pk=pk)
+    return render(request, 'app/photos_detail.html', {'photo': photo})
+
 
 @require_POST
 def photos_delete(request, pk):
-  photo = get_object_or_404(Photo, pk=pk)
-  photo.delete()
-  messages.success(request, "１件の投稿が削除されました。")
-  return redirect('app:users_detail', request.user.id)
+    photo = get_object_or_404(Photo, pk=pk)
+    photo.delete()
+    messages.success(request, "1件の投稿が削除されました。")
+    return redirect('app:users_detail', request.user.id)
+
 
 def photos_category(request, category):
-  # title(Categoryのtitle、つまりcategory)がURLの文字列と一致するCategoryインスタンスを取得。
-  category = Category.objects.get(title=category)
-  # 取得したCategoryに属するPhoto一覧を取得。逆参照？
-  photos = Photo.objects.filter(category=category).order_by('-created_at')
-  return render(request, 'app/index.html', {'photos':photos, 'category': category})
+    category = Category.objects.get(title=category)
+    photos = Photo.objects.filter(category=category).order_by('-created_at')
+    return render(request, 'app/index.html', {
+      'photos':photos, 'category': category
+      })
   
+
 @login_required
 @require_POST
 def fav_photos_status(request):
-  photo = get_object_or_404(Photo, pk=request.POST["photo_id"])
-  user = request.user
-  if photo in user.fav_photos.all():
-    user.fav_photos.remove(photo)
-  else:
-    user.fav_photos.add(photo)
-  return redirect('app:photos_detail', pk=photo.id)
+    photo = get_object_or_404(Photo, pk=request.POST["photo_id"])
+    user = request.user
+    if photo in user.fav_photos.all():
+        user.fav_photos.remove(photo)
+    else:
+        user.fav_photos.add(photo)
+    return redirect('app:photos_detail', pk=photo.id)
+
 
 @login_required
 def fav_photos(request):
-  user = request.user
-  photos = user.fav_photos.all()
-  return render(request, 'app/index.html', {'photos': photos})
+    user = request.user
+    photos = user.fav_photos.all()
+    return render(request, 'app/index.html', {'photos': photos})
