@@ -6,13 +6,13 @@
     <div class="card">
       <div class="card-body">
         <form action="{% url 'app:login' %}" method="POST">{% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
+          {{ form.non_field_errors }}
+          {% for field in form %}
             {{ field }}
             {{ field.errors }}
             <br>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary btn-block" >ログイン</button>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary btn-block">ログイン</button>
         </form>
       </div>
 
@@ -23,7 +23,7 @@
     </div>
     <div class="text-center py-2">
       <small>
-        <a href="#" class="text-muted">Forgot your password?</a>
+        <a href="{% url 'app:password_reset' %}" class="text-muted">パスワードを忘れた方</a>
       </small>
     </div>
   </div>
