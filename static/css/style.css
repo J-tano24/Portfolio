@@ -47,10 +47,10 @@ b {
   flex-wrap: wrap;
 }
 .photos-list img{
-  height: 300px;
+  height: 200px;
   object-fit: cover;
   display: inline-block;
-  width: calc(33.3% - 10px);
+  width: calc(25% - 10px);
   margin: 3px;
   cursor: pointer;
 }
