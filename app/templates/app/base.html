@@ -9,7 +9,8 @@
     <!-- Bootstrap読み込み -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <!-- CSSファイル読み込み -->
-    <link rel="stylesheet" type='text/css' href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type='text/css' href="{% static 'css/style.css' %}" media="screen and (min-width:768px)">
+    <link rel="stylesheet" type='text/css' href="{% static 'css/mobile.css' %}" media="screen and (max-width:767px)">
     <!-- favicon設定 -->
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" />
 
