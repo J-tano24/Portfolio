@@ -26,8 +26,10 @@
   </div>
 
   <h4 id="place_name">{{ photo.place_name }}</h3>
-
-  <img src="{{ photo.image.url }}" alt="Responsive image" class="img-thumbnail shadow p-2 mb-3 bg-white rounded">
+  
+  <div class="photo-image">
+    <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border">
+  </div>
 
   <div class="photo-info">
     <p>投稿者：</p>

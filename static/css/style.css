@@ -3,14 +3,18 @@ body {
 }
 
 /* photos_detail */
+.photo-image img{
+  box-shadow: 0 10px 25px 0 rgba(104, 56, 56, 0.5);
+}
 .photo-detail {
   display: flex;
   float: right;
-  padding-bottom: 10px;
+  padding-bottom: 10ipx;
 }
 .photo-info {
   display: flex;
   float: right;
+  margin-top: 10px;
 }
 h4 {
   font-weight: 900;
@@ -53,6 +57,7 @@ b {
   width: calc(25% - 10px);
   margin: 3px;
   cursor: pointer;
+  box-shadow: 0 10px 25px 0 rgba(104, 56, 56, 0.5);
 }
 .open:hover {
   opacity: 0.7;

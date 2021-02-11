@@ -7,24 +7,24 @@ var infoWindow;
 function initMap() {
   var gmap = document.getElementById('gmap');
   map = new google.maps.Map(gmap, {
-    center: {lat: 52.215933, lng: 19.134422},
-    zoom: 3.8,
+    center: { lat: 52.215933, lng: 19.134422 },
+    zoom: 4.0,
     mapTypeId: 'hybrid',
   });
 
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function () {
     var place = $("#place_name").text();
     var geocoder = new google.maps.Geocoder();
 
     geocoder.geocode({
       'address': place,
       'region': 'eu',
-    }, function(results, status) {
+    }, function (results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         console.log(results)
-        
+
         var bounds = new google.maps.LatLngBounds();
-        
+
         for (var i in results) {
           if (results[0].geometry) {
             var latlng = results[0].geometry.location;
@@ -34,6 +34,8 @@ function initMap() {
             setMarker(latlng);
             setInfoW(place, latlng, address);
             markerEvent();
+            // 検索地を中心にMapを表示
+            map.setCenter(latlng);
           }
         }
       } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
@@ -44,7 +46,6 @@ function initMap() {
       }
     });
   });
-
 }
 
 function setMarker(setplace) {
@@ -56,13 +57,13 @@ function setMarker(setplace) {
 }
 
 function setInfoW(place, latlng, address) {
-infoWindow = new google.maps.InfoWindow({
-  content: address + "<br><a href='http://www.google.com/search?q=" + place + "&tbm=isch' gmap='_blank'>関連画像検索</a>"
-});
+  infoWindow = new google.maps.InfoWindow({
+    content: address + "<br><a href='http://www.google.com/search?q=" + place + "&tbm=isch' gmap='_blank'>関連画像検索</a>"
+  });
 }
 
 function markerEvent() {
-  marker.addListener('click', function() {
-  infoWindow.open(map, marker);
+  marker.addListener('click', function () {
+    infoWindow.open(map, marker);
   });
 }

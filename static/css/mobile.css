@@ -3,6 +3,9 @@ body {
 }
 
 /* photos_detail */
+.photo-image img{
+  box-shadow: 0 10px 25px 0 rgba(104, 56, 56, 0.5);
+}
 .photo-detail {
   display: flex;
   float: right;
@@ -15,10 +18,11 @@ body {
 h4 {
   font-weight: 900;
   line-height: normal;
+  font-size: 15px;
 }
 .gmap {
   width: 100%;
-  height: 500px;
+  height: 300px;
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -47,12 +51,13 @@ b {
   flex-wrap: wrap;
 }
 .photos-list img{
-  height: 300px;
+  height: 100px;
   object-fit: cover;
   display: inline-block;
-  width: 100%;
-  margin: 3px;
+  width: calc(50% - 10px);
+  margin: 2px;
   cursor: pointer;
+  box-shadow: 0 10px 25px 0 rgba(104, 56, 56, 0.5);
 }
 .open:hover {
   opacity: 0.7;
