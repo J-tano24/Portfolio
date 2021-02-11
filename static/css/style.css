@@ -59,7 +59,8 @@ b {
   cursor: pointer;
   box-shadow: 0 10px 25px 0 rgba(104, 56, 56, 0.5);
 }
-.open:hover {
+
+.photos-list img:hover {
   opacity: 0.7;
 }
 

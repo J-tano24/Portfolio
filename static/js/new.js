@@ -7,8 +7,8 @@ var infoWindow;
 function initMap() {
   var gmap = document.getElementById('gmap');
   map = new google.maps.Map(gmap, {
-    center: {lat: 52.215933, lng: 19.134422},
-    zoom: 4.0,
+    center: {lat: 35.6828387, lng: 139.7594549},
+    zoom: 1.5,
     mapTypeId: 'hybrid',
   });
 
@@ -40,6 +40,7 @@ function initMap() {
             setMarker(latlng);
             setInfoW(place, latlng, address);
             markerEvent();
+            map.setCenter(latlng);
           }
         }
       } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
