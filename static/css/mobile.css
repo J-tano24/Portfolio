@@ -18,7 +18,9 @@ body {
 h4 {
   font-weight: 900;
   line-height: normal;
-  font-size: 15px;
+  font-size: 20px;
+  margin-bottom: 0mm;
+  line-height: 40px;
 }
 .gmap {
   width: 100%;
