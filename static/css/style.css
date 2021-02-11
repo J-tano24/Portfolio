@@ -5,9 +5,13 @@ header nav .category {
   margin-left: 10px;
 }
 body {
-  background-image: url(../img/criss-cross.png);
+  background-image: url(../img/atlas-1052011_1920.jpg);
 }
 
+/* index.html */
+h2 {
+  color: aliceblue;
+}
 
 /* photos_detail */
 .photo-image img{
@@ -23,9 +27,13 @@ body {
   float: right;
   margin-top: 10px;
 }
-h4 {
+.photo-info p{
+  color:aliceblue;
+}
+.photo-container h4 {
   font-weight: 900;
   line-height: normal;
+  color: aliceblue;
 }
 .gmap {
   width: 100%;
