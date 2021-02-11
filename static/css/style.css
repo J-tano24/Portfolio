@@ -1,6 +1,13 @@
+
+/* base.html */
+header nav .category {
+  font-size: 15px;
+  margin-left: 10px;
+}
 body {
   background-image: url(../img/criss-cross.png);
 }
+
 
 /* photos_detail */
 .photo-image img{

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
-from django.contrib.auth import get_user_model, authenticate, login 
+from django.contrib.auth import get_user_model, authenticate, login
 from .forms import CustomUserCreationForm, LoginForm, MyPasswordChangeForm, MyPasswordResetForm, MySetPasswordForm
 from .models import Photo, Category
 from .forms import PhotoForm
@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import (
-    LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView 
+    LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 )
 from django.views import generic
 from django.conf import settings
@@ -32,26 +32,28 @@ class Logout(LogoutView):
 
 
 class UserCreate(generic.CreateView):
-    template_name = 'app/user_create.html' 
+    template_name = 'app/user_create.html'
     form_class = CustomUserCreationForm
 
-    def form_valid(self, form): 
+    def form_valid(self, form):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
 
         current_site = get_current_site(self.request)
-        domain = current_site.domain 
+        domain = current_site.domain
         # URLを生成するのに必要な情報をcontextにまとめる。
         context = {
-            'protocol': self.request.scheme, # http
+            'protocol': self.request.scheme,  # http
             'domain': domain,
             'token': dumps(user.pk),
             'user': user,
         }
 
-        subject = render_to_string('app/mail_template/create/subject.txt', context)
-        message = render_to_string('app/mail_template/create/message.txt', context)
+        subject = render_to_string(
+            'app/mail_template/create/subject.txt', context)
+        message = render_to_string(
+            'app/mail_template/create/message.txt', context)
 
         user.email_user(subject, message)
         return redirect('app:user_create_done')
@@ -89,7 +91,8 @@ class UserCreateComplete(generic.TemplateView):
                 if not user.is_active:
                     # 問題なければ本登録とする
                     user.is_active = True
-                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    login(request, user,
+                          backend='django.contrib.auth.backends.ModelBackend')
                     user.save()
                     return super().get(request, **kwargs)
 
@@ -103,7 +106,7 @@ class PasswordChange(PasswordChangeView):
 
 
 class PasswordChangeDone(PasswordChangeDoneView):
-   template_name = 'app/password_change_done.html'
+    template_name = 'app/password_change_done.html'
 
 
 class PasswordReset(PasswordResetView):
@@ -137,17 +140,17 @@ def users_detail(request, pk):
     user = get_object_or_404(get_user_model(), pk=pk)
     photos = user.photo_set.all().order_by('-created_at')
     return render(request, 'app/users_detail.html', {
-      'user':user, 'photos':photos
-      })
+        'user': user, 'photos': photos
+    })
 
 
 @login_required
 def photos_new(request):
     if request.method == "POST":
         form = PhotoForm(request.POST, request.FILES)
-        breakpoint() #POSTされているか検証
+        breakpoint()  # POSTされているか検証
         if form.is_valid():
-            breakpoint() #form.is_validになっているか検証
+            breakpoint()  # form.is_validになっているか検証
             photo = form.save(commit=False)
             photo.post_user = request.user
             photo.save()
@@ -172,12 +175,14 @@ def photos_delete(request, pk):
 
 
 def photos_category(request, category):
+    # breakpoint()
     category = Category.objects.get(title=category)
     photos = Photo.objects.filter(category=category).order_by('-created_at')
+    # breakpoint()
     return render(request, 'app/index.html', {
-      'photos':photos, 'category': category
-      })
-  
+        'photos': photos, 'category': category
+    })
+
 
 @login_required
 @require_POST

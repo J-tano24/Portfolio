@@ -2,7 +2,7 @@
 {% block content %} 
 
 {% if category %}
-  <h2>カテゴリー：{{ category.title }}の検索結果</h2>
+  <h2>#{{ category.title }}</h2>
 {% endif %}
 
 {% if 'fav_photos' in request.path %}
