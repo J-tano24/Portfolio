@@ -1,14 +1,14 @@
 {% extends 'app/base.html' %}
-{% block content %} 
+{% block content %}
 
 {% if category %}
-  <h2>#{{ category.title }}</h2>
+<h2>#{{ category.title }}</h2>
 {% endif %}
 
 {% if 'fav_photos' in request.path %}
-  <div style="font-weight:bold; font-size: 28px; margin-bottom: 20px;">
-    お気に入り
-  </div>
+<div style="font-weight:bold; font-size: 28px; margin-bottom: 20px;">
+  お気に入り
+</div>
 {% endif %}
 
 {% include 'app/photos_list.html' %}

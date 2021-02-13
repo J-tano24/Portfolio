@@ -7,24 +7,24 @@ var infoWindow;
 function initMap() {
   var gmap = document.getElementById('gmap');
   map = new google.maps.Map(gmap, {
-    center: {lat: 35.6828387, lng: 139.7594549},
+    center: { lat: 35.6828387, lng: 139.7594549 },
     zoom: 1.5,
     mapTypeId: 'hybrid',
   });
 
-  document.getElementById('search').addEventListener('click', function() {
+  document.getElementById('search').addEventListener('click', function () {
     var place = $('#keyword').val();
     $('#id_place_name').val(place)
 
     var geocoder = new google.maps.Geocoder();
-    
+
     geocoder.geocode({
       'address': place,
       'region': 'eu',
-    }, function(results, status) {
+    }, function (results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         console.log(results)
-        
+
         var bounds = new google.maps.LatLngBounds();
 
         for (var i in results) {
@@ -34,7 +34,7 @@ function initMap() {
             var lng = latlng.lng().toFixed(7)
             $('#id_lat').val(lat)
             $('#id_lng').val(lng)
-            
+
             var address = results[0].formatted_address;
             bounds.extend(latlng);
             setMarker(latlng);
@@ -50,10 +50,10 @@ function initMap() {
         alert("エラー発生");
       }
     });
-    
+
   });
-  
-  document.getElementById('clear').addEventListener('click', function() {
+
+  document.getElementById('clear').addEventListener('click', function () {
     deleteMakers();
   });
 }
@@ -68,7 +68,7 @@ function setMarker(setplace) {
 }
 
 function deleteMakers() {
-  if(marker != null){
+  if (marker != null) {
     marker.setMap(null);
   }
   marker = null;
@@ -81,7 +81,7 @@ function setInfoW(place, latlng, address) {
 }
 
 function markerEvent() {
-  marker.addListener('click', function() {
+  marker.addListener('click', function () {
     infoWindow.open(map, marker);
   });
 }

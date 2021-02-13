@@ -2,8 +2,8 @@
 
 <div class="photos-list">
   {% for photo in photos %}
-    <a href="{% url 'app:photos_detail' photo.id %}">
-      <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border" >
-    </a>
+  <a href="{% url 'app:photos_detail' photo.id %}">
+    <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border">
+  </a>
   {% endfor %}
 </div>

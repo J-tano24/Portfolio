@@ -3,20 +3,20 @@
 
 {% block content %}
 
-<div class="photo-container" >
+<div class="photo-container">
   <div class="photo-detail">
-    <!-- お気に入りボタン --> 
+    <!-- お気に入りボタン -->
     {% if not request.user == photo.post_user %}
     <form action="{% url 'app:fav_photos_status' %}" method="post">{% csrf_token %}
       <input type="hidden" name="photo_id" value="{{ photo.id }}">
       {% if photo in user.fav_photos.all %}
-      <input type="submit" name="submit" class="btn btn-warning" value="お気に入り"/> 
+      <input type="submit" name="submit" class="btn btn-warning" value="お気に入り" />
       {% else %}
       <input type="submit" name="submit" class="btn btn-outline-warning" value=" お気に入り" />
       {% endif %}
     </form>
     {% endif %}
-    
+
     <!-- 削除ボタン -->
     {% if request.user == photo.post_user %}
     <form method="post" action="{% url 'app:photos_delete' photo.id %}">{% csrf_token %}
@@ -26,25 +26,26 @@
   </div>
 
   <h4 id="place_name">{{ photo.place_name }}</h3>
-  
-  <div class="photo-image">
-    <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border">
-  </div>
 
-  <div class="photo-info">
-    <p>投稿者：</p>
-    <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
-  </div>
+    <div class="photo-image">
+      <img src="{{ photo.image.url }}" alt="Responsive image" class="img-fluid rounded border">
+    </div>
 
-  <div id="gmap" class="gmap"></div>
+    <div class="photo-info">
+      <p>投稿者：</p>
+      <a href="{% url 'app:users_detail' photo.post_user.id %}">@{{ photo.post_user }}</a>
+    </div>
+
+    <div id="gmap" class="gmap"></div>
 
 </div>
 
 <!-- GoogleAPI -->
-<script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap" async defer></script>
+<script
+  src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyAjtr9s7GMqEqGiCwbNBIBPsYVcSCfqZaw&callback=initMap"
+  async defer></script>
 
 <!-- jsファイルの読み込み -->
 <script src="{% static 'js/detail.js' %}"></script>
 
 {% endblock %}
-
