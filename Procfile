@@ -1,0 +1,1 @@
+web: gunicorn photoservice_p.wsgi
