@@ -46,10 +46,11 @@ table {
 b {
   float: left;
   padding-right: 10px;
-  
+  color: aliceblue;
 }
 .sub {
   margin-bottom: 0rem;
+  color: aliceblue;
 }
 .data-post {
   text-align: right;
@@ -74,4 +75,7 @@ b {
   opacity: 0.7;
 }
 
-
+/* users_detail */
+p {
+  color: aliceblue;
+}
