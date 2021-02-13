@@ -148,9 +148,7 @@ def users_detail(request, pk):
 def photos_new(request):
     if request.method == "POST":
         form = PhotoForm(request.POST, request.FILES)
-        breakpoint()  # POSTされているか検証
         if form.is_valid():
-            breakpoint()  # form.is_validになっているか検証
             photo = form.save(commit=False)
             photo.post_user = request.user
             photo.save()
