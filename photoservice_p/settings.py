@@ -24,11 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'p1mp-=ipk@g%u13mfw7_qu9c$4g^fc2xc!!udzqd_eph_ene-e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = "True"
-# DEBUG = os.environ.get("DEBUG") == "True"
+# DEBUG = True
+DEBUG = os.environ.get("DEBUG") == "True"
 
-ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['photoservice-p.herokuapp.com']
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['photoservice-p.herokuapp.com']
 
 
 # Application definition
@@ -136,9 +136,17 @@ LOGIN_URL = 'app:login'
 LOGIN_REDIRECT_URL = 'app:index'
 LOGOUT_REDIRECT_URL = 'app:index'
 
-# メールをコンソールに表示する
+# メールをコンソールに表示する。（DEBUG = True）
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'j.tanoue24@gmail.com'
 
+if not DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = 'j.tanoue24@gmail.com'
+    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+    EMAIL_USE_TLS = True
 
 if not DEBUG:
     import django_heroku
